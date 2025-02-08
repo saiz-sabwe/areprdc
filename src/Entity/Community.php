@@ -23,6 +23,11 @@ class Community
     #[ORM\JoinColumn(nullable: false)]
     private ?Sector $sector = null;
 
+    public function __toString(): string
+    {
+        return $this->label ;
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
