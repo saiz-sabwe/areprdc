@@ -1,6 +1,7 @@
 
 ###> symfony/framework-bundle ###
 /.env
+.env
 /.env.dev
 /.env.test
 /.env.local
@@ -17,7 +18,8 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
+###> symfony/phpunit-bridge ###jsui arrivé a 10h
+
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
