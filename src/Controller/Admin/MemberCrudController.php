@@ -6,14 +6,19 @@ use App\Entity\Address;
 use App\Entity\City;
 use App\Entity\Federation;
 use App\Entity\Member;
+use App\Controller\Admin\CityCrudController;
+use App\Controller\Admin\FederationCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,87 +30,125 @@ class MemberCrudController extends AbstractCrudController
         return Member::class;
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_NEW, Action::INDEX);
+    }
+
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            // ID caché dans le formulaire car généré automatiquement
+            // --- Informations sur le membre ---
+            FormField::addPanel('Identité du membre')->collapsible(),
             IdField::new('id')->hideOnForm(),
 
-            // Numéro AREP (Référence), affiché seulement dans l'index, en lecture seule
             TextField::new('reference', 'Numéro AREP')
                 ->setFormTypeOption('disabled', true)
                 ->onlyOnIndex(),
 
-            // Informations personnelles
             TextField::new('firstname', 'Prénom')->setRequired(true),
             TextField::new('name', 'Nom')->setRequired(true),
             TextField::new('lastname', 'Postnom')->setRequired(true),
-            ChoiceField::new('gender', 'Sexe')->setChoices(['Homme' => 'H', 'Femme' => 'F'])->setRequired(true),
-            EmailField::new('email')->setRequired(false),
+            ChoiceField::new('gender', 'Sexe')
+                ->setChoices(['Homme' => 'H', 'Femme' => 'F'])
+                ->setRequired(true),
+            EmailField::new('email')->setRequired(false)->hideOnIndex(),
 
             TextField::new('placeOfBirth', 'Lieu de naissance')->hideOnIndex(),
             TextField::new('country', 'Pays')->hideOnIndex(),
             TextField::new('phone', 'Téléphone')->hideOnIndex(),
             TextField::new('education', 'Niveau d\'études')->hideOnIndex(),
+            AssociationField::new('position', 'Fonction'),
             TextField::new('affiliation', 'Affiliation politique')->hideOnIndex(),
 
+            DateTimeField::new('dateOfBirth', 'Date de naissance')
+                ->setRequired(false)
+                ->hideOnIndex(),
 
-
-            // Date de naissance (facultatif)
-            DateTimeField::new('dateOfBirth', 'Date de naissance')->setRequired(false)->hideOnIndex(),
-
-            // Relations avec d'autres entités
             FormField::addPanel('Origine du membre')->collapsible(),
-            AssociationField::new('memberCategory', 'Catégorie Membre')->setRequired(true),
-            AssociationField::new('province', 'Province')->setRequired(true)->hideOnIndex(),
-            AssociationField::new('territory', 'Territoire')->setRequired(true)->hideOnIndex(),
-            AssociationField::new('sector', 'Secteur')->setRequired(false)->hideOnIndex(),
-            AssociationField::new('community', 'Groupement')->setRequired(false)->hideOnIndex(),
+            AssociationField::new('memberCategory', 'Catégorie Membre')
+                ->setRequired(true),
+            AssociationField::new('province', 'Province')
+                ->setRequired(true)
+                ->hideOnIndex(),
+            AssociationField::new('territory', 'Territoire')
+                ->setRequired(true)
+                ->hideOnIndex(),
+            AssociationField::new('sector', 'Secteur')
+                ->setRequired(false)
+                ->hideOnIndex(),
+            AssociationField::new('community', 'Groupement')
+                ->setRequired(false)
+                ->hideOnIndex(),
 
-//            FormField::addPanel('Adresse du membre')->collapsible(),
-//
-//           // AssociationField::new('address', 'Adresse')->setRequired(false)->hideOnIndex(),
-//            TextField::new('address.municipality', 'Municipalité')->setRequired(false),
-//            TextField::new('address.neighborhood', 'Quartier')->setRequired(false),
-//            TextField::new('address.avenue', 'Avenue')->setRequired(false),
-//            TextField::new('address.number', 'Numéro')->setRequired(false),
-//            AssociationField::new('address.city', 'Ville')->setRequired(true),
-//            AssociationField::new('address.federation', 'Fédération')->setRequired(true),
+            // --- Informations sur l'adresse ---
+            FormField::addPanel('Adresse du membre')->collapsible(),
 
-            // Métadonnées (Dates de création et mise à jour, affichées uniquement en détail)
+            TextField::new('address.municipality', 'Commune')
+                ->setRequired(false)
+                ->hideOnIndex(),
+            TextField::new('address.neighborhood', 'Quartier')
+                ->setRequired(false)
+                ->hideOnIndex(),
+            TextField::new('address.avenue', 'Avenue')
+                ->setRequired(true),
+            TextField::new('address.number', 'Numéro')
+                ->setRequired(true),
+
+            // Dropdown pour sélectionner une City déjà créée
+            AssociationField::new('address.city', 'Ville')
+                ->setRequired(true)
+                ->setCrudController(CityCrudController::class)
+                ->hideOnIndex(),
+
+            // Dropdown pour sélectionner une Federation déjà créée
+            AssociationField::new('address.federation', 'Fédération')
+                ->setRequired(true)
+                ->setCrudController(FederationCrudController::class)
+                ->hideOnIndex(),
+
+            // --- Métadonnées ---
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
             DateTimeField::new('updatedAt', 'Dernière mise à jour')->onlyOnDetail(),
 
-            // Carte de Membre - Champ Virtuel, lien vers la carte (affiché uniquement dans l'index)
             UrlField::new('email', 'Carte de Membre')
                 ->setVirtual(true)
                 ->formatValue(function ($value, $entity) {
-                    return sprintf('<a href="/member/card/%s" target="_blank">Voir Carte</a>', $entity->getId());
+                    return sprintf(
+                        '<a href="/member/card/%s" target="_blank">Voir Carte</a>',
+                        $entity->getId()
+                    );
                 })
                 ->onlyOnIndex(),
         ];
     }
-//
-//    public function createEntity(string $entityFqcn)
-//    {
-//        $member = new Member();
-//
-//        // Vérifier et initialiser Address si elle est null
-//        if ($member->getAddress() === null) {
-//            $address = new Address();
-//
-//            // Initialiser la ville et la fédération avec des objets vides pour éviter l'erreur NULL
-//            $address->setCity(new City());
-//            $address->setFederation(new Federation());
-//
-//            $member->setAddress($address);
-//        }
-//
-//        return $member;
-//    }
 
+    /**
+     * Lors de la création d'un Member, on s'assure que l'instance d'Address est créée.
+     */
+    public function createEntity(string $entityFqcn)
+    {
+        $member = new Member();
+        $address = new Address();
+        $member->setAddress($address);
+        return $member;
+    }
 
+    /**
+     * Lors de l'édition, si l'Address n'est pas initialisée (null), on lui affecte une nouvelle instance.
+     * Ceci évite l'erreur "PropertyAccessor requires a graph of objects..." lors de l'accès à "address.municipality".
+     */
+    public function edit(AdminContext $context)
+    {
+        $member = $context->getEntity()->getInstance();
+        if (null === $member->getAddress()) {
+            $member->setAddress(new Address());
+        }
+        return parent::edit($context);
+    }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
@@ -113,26 +156,33 @@ class MemberCrudController extends AbstractCrudController
             return;
         }
 
-        // Vérifier que la province et la catégorie sont bien définies avant de générer le numéro AREP
+        // Persistance de l'Address et de ses associations
+        if ($entityInstance->getAddress()) {
+            $address = $entityInstance->getAddress();
+            if ($address->getCity()) {
+                $entityManager->persist($address->getCity());
+            }
+            if ($address->getFederation()) {
+                $entityManager->persist($address->getFederation());
+            }
+            $entityManager->persist($address);
+        }
+
+        // Génération du numéro AREP si la province et la catégorie sont renseignées
         if ($entityInstance->getProvince() && $entityInstance->getMemberCategory()) {
-            // Récupérer le dernier membre enregistré
             $lastMember = $entityManager->getRepository(Member::class)->findOneBy([], ['id' => 'DESC']);
             $lastNumber = $lastMember ? intval(substr($lastMember->getReference(), 5, 4)) + 1 : 1;
 
-            // Déterminer le code de la catégorie en fonction du nombre de membres
-            $categoryIndex = intdiv($lastNumber - 1, 1000); // Change tous les 1000 membres
-            $categoryCode = chr(65 + intdiv($categoryIndex, 26)) . chr(65 + ($categoryIndex % 26)); // AA, AB, AC...
+            $categoryIndex = intdiv($lastNumber - 1, 1000);
+            $categoryCode = chr(65 + intdiv($categoryIndex, 26)) . chr(65 + ($categoryIndex % 26));
 
-            // Générer le numéro de membre
-            $provinceCode = strtoupper(substr($entityInstance->getProvince()->getLabel(), 0, 3)); // KIN par exemple
+            $provinceCode = strtoupper(substr($entityInstance->getProvince()->getLabel(), 0, 3));
             $newReference = sprintf("AREP %04d-%s/%s", $lastNumber, $provinceCode, $categoryCode);
 
-            // Appliquer le numéro de membre
             $entityInstance->setReference($newReference);
         }
 
-        parent::persistEntity($entityManager, $entityInstance);
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
     }
-
-
 }

@@ -19,6 +19,9 @@ class Position
     #[ORM\Column(length: 50)]
     private ?string $label = null;
 
+    #[ORM\Column(length: 50)]
+    private ?string $description = null;
+
     public function __toString(): string
     {
         return $this->label ;
@@ -37,6 +40,18 @@ class Position
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -23,6 +23,11 @@ class Federation
     #[ORM\JoinColumn(nullable: false)]
     private ?City $city = null;
 
+    public function __toString(): string
+    {
+        return $this->label ;
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;

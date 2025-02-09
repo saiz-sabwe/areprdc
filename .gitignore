@@ -27,4 +27,5 @@
 ###> symfony/asset-mapper ###
 /public/assets/video/
 /assets/vendor/
+/migrations/
 ###< symfony/asset-mapper ###

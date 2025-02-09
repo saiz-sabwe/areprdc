@@ -77,11 +77,15 @@ class Member
     #[ORM\ManyToOne]
     private ?Community $community = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Address $address = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $status = null;
+
+    #[ORM\ManyToOne]
+    private ?Position $position = null;
 
     public function __construct()
     {
@@ -346,6 +350,18 @@ class Member
     public function setStatus(?int $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPosition(): ?Position
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?Position $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }
