@@ -50,7 +50,7 @@ class MemberService
             }
         }
 
-        $fontPath = $projectDir . '/public/assets/font/Roboto-Bold.ttf';
+        $fontPath = $projectDir . '/public/assets/fonts/Roboto-Bold.ttf';
 
         // Vérifier l'existence des fichiers requis
         if (!file_exists($imagePath) || !file_exists($fontPath)) {

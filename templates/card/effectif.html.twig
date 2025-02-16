@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="flex items-center justify-center min-h-screen bg-gray-400">
+      <div class="h-[519px] w-[732px] bg-white relative overflow-hidden">
+        <!-- the banner -->
+        <div
+          class="h-[130px] bg-gradient-to-bl from-gray-50 to-gray-200 flex items-center justify-center gap-8"
+        >
+          <div>
+            <img
+              src="{{ asset('assets/img/card/LOGO.png') }}"
+              alt="Logo AREP"
+              class="h-[80px] w-auto"
+            />
+          </div>
+          <div class="h-[100px] w-1 flex flex-col">
+            <div class="h-1/3 w-full bg-blue-500"></div>
+            <div class="h-1/3 w-full bg-yellow-300"></div>
+            <div class="h-1/3 w-full bg-red-500"></div>
+          </div>
+          <div>
+            <img
+              src="{{ asset('assets/img/card/LOGO-2.png') }}"
+              alt="Logo AREP"
+              class="h-[80px] w-auto"
+            />
+          </div>
+        </div>
+
+        <!-- the main body -->
+        <div class="h-[calc(100%-180px)] flex items-start gap-4 pt-3">
+          <div class="w-[70%] px-5 text-[#002494] text-3xl font-medium">
+            <div>Nom : {{ member.name }}</div>
+            <div>Post-Nom : {{ member.lastname }}</div>
+            <div>Prénom : {{ member.firstname }}</div>
+            <div>Sexe : {{ member.gender }}</div>
+            <div>Adresse :</div>
+            <div>Fédération : {{ member.address.federation }}</div>
+            <div>Délivrée :</div>
+            <div>Code : {{ member.reference }}</div>
+          </div>
+          <div
+            class="w-[30%] px-6 flex flex-col items-center justify-center gap-3"
+          >
+            <div
+              class="h-[180px] w-full border-2 border-[#002494] overflow-hidden"
+            >
+              <!-- the profile pic goes here -->
+              <img
+                src="{{ asset('assets/img/card/pic.jpg') }}"
+                alt=""
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="w-[75%] h-[100px] overflow-hidden">
+              <img
+                src="{{ asset('assets/img/card/qrcode.png') }}"
+                alt=""
+                class="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- the footer -->
+        <div
+          class="h-[50px] bg-gradient-to-r from-[#002494] to-[#05133F] text-white flex items-center justify-center text-center"
+        >
+          <div class="text-3xl font-bold uppercase">Membre effectif</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

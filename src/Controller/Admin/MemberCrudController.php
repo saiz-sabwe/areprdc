@@ -53,7 +53,7 @@ class MemberCrudController extends AbstractCrudController
             TextField::new('name', 'Nom')->setRequired(true),
             TextField::new('lastname', 'Postnom')->setRequired(true),
             ChoiceField::new('gender', 'Sexe')
-                ->setChoices(['Homme' => 'H', 'Femme' => 'F'])
+                ->setChoices(['Homme' => 'M', 'Femme' => 'F'])
                 ->setRequired(true),
             EmailField::new('email')->setRequired(false)->hideOnIndex(),
 

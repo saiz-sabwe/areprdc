@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="flex items-center justify-center min-h-screen bg-gray-400">
+      <div class="w-[519px] h-[732px] bg-white relative overflow-hidden">
+        <!-- the banner goes here -->
+        <div class="h-[201px]">
+          <img
+            src="{{ asset('assets/img/card/BANNIERE.png') }}"
+            class="w-full h-auto absolute top-0 left-0"
+            alt=""
+          />
+        </div>
+
+        <!-- the profile pic -->
+        <div class="h-[150px] relative">
+          <div
+            class="w-[200px] h-[200px] left-1/2 bottom-0 absolute -translate-x-1/2 bg-white rounded-full flex items-center justify-center"
+          >
+            <div
+              class="w-[97%] h-[97%] bg-gradient-to-br from-[#864807] to-[#CBA020] rounded-full flex items-center justify-center"
+            >
+              <div
+                class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden"
+              >
+                <!-- the profile image should be here like this -->
+                <img
+                  src="{{ asset('assets/img/card/pic.jpg') }}"
+                  alt=""
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- the card texts -->
+        <div class="text-[1.35rem] flex flex-col px-6 pt-2 pb-4 text-center">
+          <div class="text-3xl font-bold">{{ member.firstname }} {{ member.name }} {{ member.lastname }}</div>
+          <div>Sexe: <span class="font-bold">{{ member.gender }}</span></div>
+          <div class="">
+            {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />Fédération de {{ member.address.federation }}
+          </div>
+          <div>
+            Délivrée: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
+          </div>
+        </div>
+
+        <!-- the qr code section -->
+        <div class="w-[100px] h-[100px] m-auto">
+          <img
+            src="{{ asset('assets/img/card/qrcode.png') }}"
+            class="w-full h-full object-cover"
+            alt=""
+          />
+        </div>
+
+        <!-- the footer -->
+        {% set imagePath = '' %}
+
+        {% if member.memberCategory.label == 'honneur gold' %}
+          {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
+        {% elseif member.memberCategory.label == 'honneur diamond' %}
+          {% set imagePath = 'assets/img/card/HONNEUR-DIAMANT.png' %}
+        {% elseif member.memberCategory.label == 'honneur bronze' %}
+          {% set imagePath = 'assets/img/card/HONNEUR-NORMAL.png' %}
+        {% endif %}
+        <div class="h-[54px]">
+          {% if imagePath is not empty %}
+            <img src="{{ asset(imagePath) }}" class="absolute left-0 bottom-0 w-full h-auto" alt="{{ member.memberCategory.label }}">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
