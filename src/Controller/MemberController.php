@@ -47,7 +47,10 @@ final class MemberController extends AbstractController
 
         }
 
-    }#[Route('/member/fiche/{id}', name: 'app_member_card')]
+    }
+
+
+    #[Route('/member/fiche/{id}', name: 'app_member_fiche')]
     public function generateMemberFiche(Member $member): Response
     {
 
