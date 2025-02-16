@@ -123,6 +123,16 @@ class MemberCrudController extends AbstractCrudController
                     );
                 })
                 ->onlyOnIndex(),
+
+            UrlField::new('email', 'Fiche de Membre')
+                ->setVirtual(true)
+                ->formatValue(function ($value, $entity) {
+                    return sprintf(
+                        '<a href="/member/fiche/%s" target="_blank">Voir Fiche</a>',
+                        $entity->getId()
+                    );
+                })
+                ->onlyOnIndex(),
         ];
     }
 
