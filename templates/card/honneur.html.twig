@@ -1,82 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="flex items-center justify-center min-h-screen bg-gray-400">
-      <div class="w-[519px] h-[732px] bg-white relative overflow-hidden">
-        <!-- the banner goes here -->
-        <div class="h-[201px]">
-          <img
-            src="{{ asset('assets/img/card/BANNIERE.png') }}"
-            class="w-full h-auto absolute top-0 left-0"
-            alt=""
-          />
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte Membre</title>
+  <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
+  <!-- Intégration de html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+<!-- Bouton pour déclencher le téléchargement -->
+<div class="text-center mt-4">
+  <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
+    Télécharger la Carte
+  </button>
+</div>
+<div class="flex items-center justify-center min-h-screen bg-gray-400">
+  <div class="w-[519px] h-[732px] bg-white relative overflow-hidden" id="card-container">
+    <!-- the banner goes here -->
+    <div class="h-[201px]">
+      <img
+              src="{{ asset('assets/img/card/BANNIERE.png') }}"
+              class="w-full h-auto absolute top-0 left-0"
+              alt=""
+              id="banner"
+      />
+    </div>
 
-        <!-- the profile pic -->
-        <div class="h-[150px] relative">
+    <!-- the profile pic -->
+    <div class="h-[150px] relative">
+      <div
+              class="w-[200px] h-[200px] left-1/2 bottom-0 absolute -translate-x-1/2 bg-white rounded-full flex items-center justify-center"
+      >
+        <div
+                class="w-[97%] h-[97%] bg-gradient-to-br from-[#864807] to-[#CBA020] rounded-full flex items-center justify-center"
+        >
           <div
-            class="w-[200px] h-[200px] left-1/2 bottom-0 absolute -translate-x-1/2 bg-white rounded-full flex items-center justify-center"
+                  class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden"
           >
-            <div
-              class="w-[97%] h-[97%] bg-gradient-to-br from-[#864807] to-[#CBA020] rounded-full flex items-center justify-center"
-            >
-              <div
-                class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden"
-              >
-                <!-- the profile image should be here like this -->
-                <img
-                  src="{{ asset('assets/img/card/pic.jpg') }}"
-                  alt=""
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
+            <!-- the profile image should be here like this -->
+            <img
+                    src="{{ asset('assets/img/card/pic.jpg') }}"
+                    alt=""
+                    class="w-full h-full object-cover"
+                    id="profile-pic"
+            />
           </div>
-        </div>
-
-        <!-- the card texts -->
-        <div class="text-[1.35rem] flex flex-col px-6 pt-2 pb-4 text-center">
-          <div class="text-3xl font-bold">{{ member.firstname }} {{ member.name }} {{ member.lastname }}</div>
-          <div>Sexe: <span class="font-bold">{{ member.gender }}</span></div>
-          <div class="">
-            {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />Fédération de {{ member.address.federation }}
-          </div>
-          <div>
-            Délivrée: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
-          </div>
-        </div>
-
-        <!-- the qr code section -->
-        <div class="w-[100px] h-[100px] m-auto">
-          <img
-            src="{{ asset('assets/img/card/qrcode.png') }}"
-            class="w-full h-full object-cover"
-            alt=""
-          />
-        </div>
-
-        <!-- the footer -->
-        {% set imagePath = '' %}
-
-        {% if member.memberCategory.label == 'honneur gold' %}
-          {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
-        {% elseif member.memberCategory.label == 'honneur diamond' %}
-          {% set imagePath = 'assets/img/card/HONNEUR-DIAMANT.png' %}
-        {% elseif member.memberCategory.label == 'honneur bronze' %}
-          {% set imagePath = 'assets/img/card/HONNEUR-NORMAL.png' %}
-        {% endif %}
-        <div class="h-[54px]">
-          {% if imagePath is not empty %}
-            <img src="{{ asset(imagePath) }}" class="absolute left-0 bottom-0 w-full h-auto" alt="{{ member.memberCategory.label }}">
-          {% endif %}
         </div>
       </div>
     </div>
-  </body>
+
+    <!-- the card texts -->
+    <div class="text-[1.35rem] flex flex-col px-6 pt-2 pb-4 text-center">
+      <div class="text-3xl font-bold">{{ member.firstname }} {{ member.name }} {{ member.lastname }}</div>
+      <div>Sexe: <span class="font-bold">{{ member.gender }}</span></div>
+      <div class="">
+        {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />Fédération de {{ member.address.federation }}
+      </div>
+      <div>
+        Délivrée: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
+      </div>
+    </div>
+
+    <!-- the qr code section -->
+    <div class="w-[100px] h-[100px] m-auto">
+      <img
+              src="{{ asset('assets/img/card/qrcode.png') }}"
+              class="w-full h-full object-cover"
+              alt=""
+              id="qr-code"
+      />
+    </div>
+
+    <!-- the footer -->
+    {% set imagePath = '' %}
+
+    {% if member.memberCategory.label == 'honneur gold' %}
+      {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
+    {% elseif member.memberCategory.label == 'honneur diamond' %}
+      {% set imagePath = 'assets/img/card/HONNEUR-DIAMANT.png' %}
+    {% elseif member.memberCategory.label == 'honneur bronze' %}
+      {% set imagePath = 'assets/img/card/HONNEUR-NORMAL.png' %}
+    {% endif %}
+    <div class="h-[54px]">
+      {% if imagePath is not empty %}
+        <img src="{{ asset(imagePath) }}" class="absolute left-0 bottom-0 w-full h-auto" alt="{{ member.memberCategory.label }}" id="footer-image">
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Ajoutez cet élément pour stocker les données du membre -->
+<div id="member-data"
+     data-firstname="{{ member.firstname }}"
+     data-name="{{ member.name }}">
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const downloadButton = document.getElementById("download-button");
+
+    downloadButton.addEventListener("click", function () {
+      // Récupérez les données du membre depuis le DOM
+      const memberData = document.getElementById("member-data");
+      const firstName = memberData.getAttribute("data-firstname");
+      const name = memberData.getAttribute("data-name");
+
+      // Sélectionnez le conteneur que vous souhaitez capturer
+      const element = document.getElementById("card-container");
+
+      // Options pour html2canvas
+      const options = {
+        scale: 2, // Augmentez la résolution de l'image
+        useCORS: true, // Autorise le chargement d'images externes
+        logging: true, // Active les logs pour le débogage
+      };
+
+      // Capturez le contenu et convertissez-le en image
+      html2canvas(element, options).then((canvas) => {
+        // Dimensions du format B6
+        const targetWidth = 498;
+        const targetHeight = 708;
+
+        // Créez un nouveau canvas pour redimensionner l'image
+        const resizedCanvas = document.createElement("canvas");
+        const resizedContext = resizedCanvas.getContext("2d");
+
+        // Définir les dimensions du nouveau canvas
+        resizedCanvas.width = targetWidth;
+        resizedCanvas.height = targetHeight;
+
+        // Calculer les proportions pour redimensionner l'image
+        const ratio = Math.min(
+                targetWidth / canvas.width,
+                targetHeight / canvas.height
+        );
+        const newWidth = canvas.width * ratio;
+        const newHeight = canvas.height * ratio;
+
+        // Centrer l'image sur le nouveau canvas
+        const offsetX = (targetWidth - newWidth) / 2;
+        const offsetY = (targetHeight - newHeight) / 2;
+
+        // Remplir le fond avec du blanc
+        resizedContext.fillStyle = "white";
+        resizedContext.fillRect(0, 0, targetWidth, targetHeight);
+
+        // Redimensionner et dessiner l'image capturée
+        resizedContext.drawImage(
+                canvas,
+                0,
+                0,
+                canvas.width,
+                canvas.height,
+                offsetX,
+                offsetY,
+                newWidth,
+                newHeight
+        );
+
+        // Convertissez le canvas redimensionné en image PNG
+        const imgData = resizedCanvas.toDataURL("image/png");
+
+        // Créez un lien de téléchargement
+        const link = document.createElement("a");
+        link.href = imgData;
+
+        // Nom du fichier téléchargé en utilisant le nom du membre
+        const fileName = `${firstName}_${name}.png`; // Par exemple : "John_Doe.png"
+        link.download = fileName;
+
+        // Déclencher le téléchargement
+        link.click();
+      });
+    });
+  });
+</script>
+</body>
 </html>

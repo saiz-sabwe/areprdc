@@ -43,7 +43,7 @@ class MemberCrudController extends AbstractCrudController
         return [
             // --- Informations sur le membre ---
             FormField::addPanel('Identité du membre')->collapsible(),
-            IdField::new('id')->hideOnForm(),
+            IdField::new('id')->hideOnForm()->hideOnIndex(),
 
             TextField::new('reference', 'Numéro AREP')
                 ->setFormTypeOption('disabled', true)
