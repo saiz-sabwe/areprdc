@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
-  <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .font-algeria {
       font-family: "Algeria";
@@ -12,7 +12,6 @@
       font-weight: normal;
       font-style: normal;
     }
-
     .font-debutan {
       font-family: "Debutan";
       src: url("{{ asset('assets/fonts/Debutan-Brush-Script.otf') }}") format("truetype");
@@ -32,42 +31,25 @@
   </button>
 </div>
 
-<!-- Votre contenu existant -->
+<!-- Zone à imprimer (début de l'impression du PDF) -->
 <div class="flex items-center justify-center min-h-screen bg-gray-400 p-6">
-  <div
-          class="w-[1000px] h-[1415px] bg-white relative overflow-hidden p-10 flex items-center justify-center"
-  >
-    <div
-            class="w-full h-full flex items-center justify-center bg-[#002161] p-[12px]"
-    >
+  <div id="pdf-container" class="w-[1000px] h-[1415px] bg-white relative overflow-hidden p-10 flex items-center justify-center">
+    <div class="w-full h-full flex items-center justify-center bg-[#002161] p-[12px]">
       <div class="w-full h-full relative bg-white py-2 px-12">
         <!-- this one is just for the border style, don't care about it... -->
-        <div
-                class="absolute left-[-4px] top-[-4px] border border-white w-[calc(100%+8px)] h-[calc(100%+8px)] z-10"
-        ></div>
-
+        <div class="absolute left-[-4px] top-[-4px] border border-white w-[calc(100%+8px)] h-[calc(100%+8px)] z-10"></div>
         <!-- and this one is for the filigrane image -->
-        <img
-                src="{{ asset('assets/img/card/LOGO-3.png') }}"
-                alt=""
-                class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[211px] opacity-20 z-10 rotate-[-45deg]"
-        />
-
+        <img src="{{ asset('assets/img/card/LOGO-3.png') }}" alt=""
+             class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[211px] opacity-20 z-10 rotate-[-45deg]" />
         <!-- the actual content starts off here -->
         <div>
           <!-- the header -->
           <div class="flex items-center justify-between relative z-20">
             <div class="flex flex-col gap-2 w-[130px] items-center">
-              <img
-                      src="{{ asset('assets/img/card/LOGO.png') }}"
-                      alt=""
-                      class="h-[80px] w-auto object-contain"
-              />
-              <img
-                      src="/src/img/LOGO-2.png"
-                      alt=""
-                      class="w-full h-auto object-contain"
-              />
+              <img src="{{ asset('assets/img/card/LOGO.png') }}" alt=""
+                   class="h-[80px] w-auto object-contain" />
+              <img src="/src/img/LOGO-2.png" alt=""
+                   class="w-full h-auto object-contain" />
             </div>
             <div class="w-[calc(100%-280px)] text-center">
               <div class="text-[2.6rem] font-debutan">
@@ -77,24 +59,16 @@
                 Agissons pour la république
               </div>
               <div class="text-4xl font-debutan">Secrétariat General</div>
-              <div
-                      class="border-t border-dashed my-3 mx-auto max-w-[80%]"
-              ></div>
+              <div class="border-t border-dashed my-3 mx-auto max-w-[80%]"></div>
               <div class="text-lg uppercase font-bold">
                 Fiche d'adhesion
               </div>
             </div>
-            <div
-                    class="w-[130px] h-[130px] border-[2px] border-[#4B70C4] overflow-hidden"
-            >
-              <img
-                      src="{{ asset('assets/img/card/pic.jpg') }}"
-                      alt=""
-                      class="w-full h-full object-cover"
-              />
+            <div class="w-[130px] h-[130px] border-[2px] border-[#4B70C4] overflow-hidden">
+              <img src="{{ asset('assets/img/card/pic.jpg') }}" alt=""
+                   class="w-full h-full object-cover" />
             </div>
           </div>
-
           <!-- the body -->
           <div class="relative z-20 py-4">
             <div>
@@ -106,26 +80,18 @@
               <div>Nationalité : {{ member.country }}<span></span></div>
               <div>Numéro de Téléphone : {{ member.phone }}<span></span></div>
             </div>
-
-            <div
-                    class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]"
-            >
+            <div class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]">
               Adresse d'origine
             </div>
-
             <div>
               <div>Province : {{ member.province }}<span></span></div>
               <div>Territoire : {{ member.territory }}<span></span></div>
               <div>Secteur : {{ member.sector }}<span></span></div>
               <div>Groupement ou chefferie : {{ member.community }}<span></span></div>
             </div>
-
-            <div
-                    class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]"
-            >
+            <div class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]">
               Adresse physique
             </div>
-
             <div>
               <div>Province ou ville : {{ member.address.city }}<span></span></div>
               <div>Commune : {{ member.address.municipality }}<span></span></div>
@@ -135,13 +101,9 @@
               <div>Secteur : {{ member.sector }}<span></span></div>
               <div>Fédération : {{ member.address.federation }}<span></span></div>
             </div>
-
-            <div
-                    class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]"
-            >
+            <div class="my-6 py-3 text-lg max-w-[75%] mx-auto italic font-bold text-[#4174C5] border-t-[2px] border-b-[2px] text-center border-[#4B70C4]">
               Autre information
             </div>
-
             <div>
               <div>Niveau d’étude : <span></span></div>
               <div>
@@ -159,7 +121,6 @@
               </div>
             </div>
           </div>
-
           <!-- the footer -->
           <div class="relative z-20">
             <p>
@@ -177,9 +138,7 @@
             </div>
             <div class="mt-12 text-center">
               4eme rue limete industriel / Kinshasa LIMETE
-              <a href="www.arepdrc.cd" class="text-[#4174C5]"
-              >www.arepdrc.cd</a
-              >
+              <a href="www.arepdrc.cd" class="text-[#4174C5]">www.arepdrc.cd</a>
               info@areprdc.cd
             </div>
           </div>
@@ -195,8 +154,8 @@
     const downloadButton = document.getElementById("download-pdf");
 
     downloadButton.addEventListener("click", function () {
-      // Sélectionnez le conteneur à convertir en PDF
-      const element = document.querySelector(".flex.items-center.justify-center.min-h-screen.bg-gray-400.p-6");
+      // Sélectionnez la zone à convertir en PDF (la zone qui commence à #pdf-container)
+      const element = document.getElementById("pdf-container");
 
       // Options pour html2canvas
       const options = {
@@ -205,7 +164,6 @@
         logging: true, // Active les logs pour le débogage
       };
 
-      // Capturez le contenu et convertissez-le en image
       html2canvas(element, options).then((canvas) => {
         // Dimensions du format A4 en mm
         const pdfWidth = 210; // Largeur A4 en mm

@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carte Membre</title>
-  <link href="{{ asset('assets/css/card/output.css') }}" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Intégration de html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Intégration de QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <!-- Bouton pour déclencher le téléchargement -->
@@ -35,9 +37,7 @@
         <div
                 class="w-[97%] h-[97%] bg-gradient-to-br from-[#864807] to-[#CBA020] rounded-full flex items-center justify-center"
         >
-          <div
-                  class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden"
-          >
+          <div class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden">
             <!-- the profile image should be here like this -->
             <img
                     src="{{ asset('assets/img/card/pic.jpg') }}"
@@ -55,7 +55,8 @@
       <div class="text-3xl font-bold">{{ member.firstname }} {{ member.name }} {{ member.lastname }}</div>
       <div>Sexe: <span class="font-bold">{{ member.gender }}</span></div>
       <div class="">
-        {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />Fédération de {{ member.address.federation }}
+        {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />
+        Fédération de {{ member.address.federation }}
       </div>
       <div>
         Délivrée: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
@@ -64,17 +65,12 @@
 
     <!-- the qr code section -->
     <div class="w-[100px] h-[100px] m-auto">
-      <img
-              src="{{ asset('assets/img/card/qrcode.png') }}"
-              class="w-full h-full object-cover"
-              alt=""
-              id="qr-code"
-      />
+      <!-- Remplacement de l'image statique par une div pour le QR code -->
+      <div id="qrcode" class="w-full h-full"></div>
     </div>
 
     <!-- the footer -->
     {% set imagePath = '' %}
-
     {% if member.memberCategory.label == 'honneur gold' %}
       {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
     {% elseif member.memberCategory.label == 'honneur diamond' %}
@@ -90,19 +86,31 @@
   </div>
 </div>
 
-<!-- Ajoutez cet élément pour stocker les données du membre -->
+<!-- Stockage des données du membre avec id -->
 <div id="member-data"
      data-firstname="{{ member.firstname }}"
-     data-name="{{ member.name }}">
+     data-name="{{ member.name }}"
+     data-member-id="{{ member.id }}">
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // Génération du QR code à partir de l'id du membre
+    const memberData = document.getElementById("member-data");
+    const memberId = memberData.getAttribute("data-member-id");
+    new QRCode(document.getElementById("qrcode"), {
+      text: memberId,
+      width: 100,
+      height: 100,
+      colorDark: "#002494",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
     const downloadButton = document.getElementById("download-button");
 
     downloadButton.addEventListener("click", function () {
       // Récupérez les données du membre depuis le DOM
-      const memberData = document.getElementById("member-data");
       const firstName = memberData.getAttribute("data-firstname");
       const name = memberData.getAttribute("data-name");
 
@@ -167,7 +175,7 @@
         link.href = imgData;
 
         // Nom du fichier téléchargé en utilisant le nom du membre
-        const fileName = `${firstName}_${name}.png`; // Par exemple : "John_Doe.png"
+        const fileName = `${firstName}_${name}.png`;
         link.download = fileName;
 
         // Déclencher le téléchargement
