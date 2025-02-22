@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\City;
 use App\Entity\Community;
+use App\Entity\Currency;
 use App\Entity\Federation;
 use App\Entity\InscriptionPayment;
 use App\Entity\Member;
@@ -63,6 +64,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section("Gestion Caisse");
         yield MenuItem::linkToCrud('Mode', 'fas fa-users', Mode::class);
+        yield MenuItem::linkToCrud('Devise', 'fas fa-users', Currency::class);
         yield MenuItem::linkToCrud('Frais inscription', 'fas fa-users', InscriptionPayment::class);
 
         yield MenuItem::section("Configuration Membres");

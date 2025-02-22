@@ -14,11 +14,11 @@
 <body>
 <!-- Bouton pour déclencher le téléchargement -->
 {% if member.imageName %}
-  <div class="text-center mt-4">
-    <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
-      Télécharger la Carte
-    </button>
-  </div>
+<div class="text-center mt-4">
+  <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
+    Télécharger la Carte
+  </button>
+</div>
 {% endif %}
 
 <!-- Stockage des données du membre -->
@@ -70,11 +70,11 @@
       <div class="w-[30%] px-6 flex flex-col items-center justify-center gap-3">
         <div class="h-[180px] w-full border-2 border-[#002494] overflow-hidden">
           <!-- Photo de profil -->
-          {#          <img#}
-          {#                  src="{{ asset('assets/img/card/pic.jpg') }}"#}
-          {#                  alt=""#}
-          {#                  class="w-full h-full object-cover"#}
-          {#          />#}
+{#          <img#}
+{#                  src="{{ asset('assets/img/card/pic.jpg') }}"#}
+{#                  alt=""#}
+{#                  class="w-full h-full object-cover"#}
+{#          />#}
           {% if member.imageName %}
             <img src="{{ asset('uploads/members/' ~ member.imageName) }}" alt="Photo de profil" class="w-full h-full object-cover" />
           {% else %}

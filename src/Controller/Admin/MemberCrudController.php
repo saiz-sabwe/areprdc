@@ -17,11 +17,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use Doctrine\ORM\EntityManagerInterface;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class MemberCrudController extends AbstractCrudController
 {
@@ -45,13 +49,24 @@ class MemberCrudController extends AbstractCrudController
             FormField::addPanel('Identité du membre')->collapsible(),
             IdField::new('id')->hideOnForm()->hideOnIndex(),
 
-            TextField::new('reference', 'Numéro AREP')
+            TextField::new('reference', 'Numéro')
                 ->setFormTypeOption('disabled', true)
                 ->onlyOnIndex(),
 
+//            ImageField::new('imageName', 'Photo')
+//                ->setUploadDir('public/uploads/members')
+//                ->setBasePath('uploads/members')
+//                ->setRequired(false),
+
+            Field::new('imageFile', 'Photo')
+                ->setFormType(VichFileType::class)
+                ->setFormTypeOptions(['required' => false])
+                ->onlyOnForms(),
+
             TextField::new('firstname', 'Prénom')->setRequired(true),
             TextField::new('name', 'Nom')->setRequired(true),
-            TextField::new('lastname', 'Postnom')->setRequired(true),
+            TextField::new('lastname', 'Postnom')->setRequired(true)
+                ->onlyOnForms(),
             ChoiceField::new('gender', 'Sexe')
                 ->setChoices(['Homme' => 'M', 'Femme' => 'F'])
                 ->setRequired(true),
@@ -69,7 +84,7 @@ class MemberCrudController extends AbstractCrudController
                 ->hideOnIndex(),
 
             FormField::addPanel('Origine du membre')->collapsible(),
-            AssociationField::new('memberCategory', 'Catégorie Membre')
+            AssociationField::new('memberCategory', 'Catégorie')
                 ->setRequired(true),
             AssociationField::new('province', 'Province')
                 ->setRequired(true)
@@ -114,7 +129,7 @@ class MemberCrudController extends AbstractCrudController
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
             DateTimeField::new('updatedAt', 'Dernière mise à jour')->onlyOnDetail(),
 
-            UrlField::new('email', 'Carte de Membre')
+            UrlField::new('email', 'Carte')
                 ->setVirtual(true)
                 ->formatValue(function ($value, $entity) {
                     return sprintf(
@@ -124,7 +139,7 @@ class MemberCrudController extends AbstractCrudController
                 })
                 ->onlyOnIndex(),
 
-            UrlField::new('email', 'Fiche de Membre')
+            UrlField::new('email', 'Fiche')
                 ->setVirtual(true)
                 ->formatValue(function ($value, $entity) {
                     return sprintf(

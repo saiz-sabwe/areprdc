@@ -36,6 +36,10 @@ class InscriptionPayment
     #[ORM\JoinColumn(nullable: false)]
     private ?Member $enrollee = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $currency = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -114,6 +118,18 @@ class InscriptionPayment
     public function setEnrollee(?Member $enrollee): static
     {
         $this->enrollee = $enrollee;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): static
+    {
+        $this->currency = $currency;
 
         return $this;
     }
