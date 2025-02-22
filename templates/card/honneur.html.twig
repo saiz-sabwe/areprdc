@@ -13,11 +13,11 @@
 <body>
 <!-- Bouton pour déclencher le téléchargement -->
 {% if member.imageName %}
-<div class="text-center mt-4">
-  <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
-    Télécharger la Carte
-  </button>
-</div>
+  <div class="text-center mt-4">
+    <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
+      Télécharger la Carte
+    </button>
+  </div>
 {% endif %}
 <div class="flex items-center justify-center min-h-screen bg-gray-400">
   <div class="w-[519px] h-[732px] bg-white relative overflow-hidden" id="card-container">
@@ -39,14 +39,10 @@
         <div
                 class="w-[97%] h-[97%] bg-gradient-to-br from-[#864807] to-[#CBA020] rounded-full flex items-center justify-center"
         >
-          <div class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden">
+          <div
+                  class="w-[97%] h-[97%] rounded-full bg-white overflow-hidden"
+          >
             <!-- the profile image should be here like this -->
-{#            <img#}
-{#                    src="{{ asset('assets/img/card/pic.jpg') }}"#}
-{#                    alt=""#}
-{#                    class="w-full h-full object-cover"#}
-{#                    id="profile-pic"#}
-{#            /> #}
             {% if member.imageName %}
               <img src="{{ asset('uploads/members/' ~ member.imageName) }}" alt="Photo de profil" class="w-full h-full object-cover" />
             {% else %}
@@ -58,138 +54,139 @@
     </div>
 
     <!-- the card texts -->
-    <div class="text-[1.35rem] flex flex-col px-6 pt-2 pb-4 text-center">
+    <div
+            class="text-[1.45rem]/[26px] flex flex-col px-6 pt-0 pb-4 text-center"
+    >
       <div class="text-3xl font-bold">{{ member.firstname }} {{ member.name }} {{ member.lastname }}</div>
-      <div>Sexe: <span class="font-bold">{{ member.gender }}</span></div>
+      <div>
+        <span class="text-3xl font-bold">{{ member.position.description }}</span>
+        <br />Sexe: <span class="font-bold">{{ member.gender }}</span>
+      </div>
       <div class="">
         {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} <br />
         Fédération de {{ member.address.federation }}
-      </div>
       <div>
-        Délivrée: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
+        Expiration: le 28 décembre 2024 <br /><span>{{ member.reference }}</span>
       </div>
     </div>
 
     <!-- the qr code section -->
     <div class="w-[100px] h-[100px] m-auto">
-      <!-- Remplacement de l'image statique par une div pour le QR code -->
       <div id="qrcode" class="w-full h-full"></div>
     </div>
 
-    <!-- the footer -->
-    {% set imagePath = '' %}
-    {% if member.memberCategory.label == 'honneur gold' %}
-      {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
-    {% elseif member.memberCategory.label == 'honneur diamond' %}
-      {% set imagePath = 'assets/img/card/HONNEUR-DIAMANT.png' %}
-    {% elseif member.memberCategory.label == 'honneur bronze' %}
-      {% set imagePath = 'assets/img/card/HONNEUR-NORMAL.png' %}
-    {% endif %}
-    <div class="h-[54px]">
-      {% if imagePath is not empty %}
-        <img src="{{ asset(imagePath) }}" class="absolute left-0 bottom-0 w-full h-auto" alt="{{ member.memberCategory.label }}" id="footer-image">
+      <!-- the footer -->
+      {% set imagePath = '' %}
+      {% if member.memberCategory.label == 'honneur gold' %}
+        {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
+      {% elseif member.memberCategory.label == 'honneur diamond' %}
+        {% set imagePath = 'assets/img/card/HONNEUR-DIAMANT.png' %}
+      {% elseif member.memberCategory.label == 'honneur argent' %}
+        {% set imagePath = 'assets/img/card/HONNEUR-ARGENT.png' %}
       {% endif %}
-    </div>
+      <div class="h-[54px]">
+        {% if imagePath is not empty %}
+          <img src="{{ asset(imagePath) }}" class="absolute left-0 bottom-0 w-full h-auto" alt="{{ member.memberCategory.label }}" id="footer-image">
+        {% endif %}
+      </div>
   </div>
 </div>
+  <!-- Stockage des données du membre avec id -->
+  <div id="member-data"
+       data-firstname="{{ member.firstname }}"
+       data-name="{{ member.name }}"
+       data-member-id="{{ member.id }}">
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Génération du QR code à partir de l'id du membre
+      const memberData = document.getElementById("member-data");
+      const memberId = memberData.getAttribute("data-member-id");
+      new QRCode(document.getElementById("qrcode"), {
+        text: memberId,
+        width: 100,
+        height: 100,
+        colorDark: "#050000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
 
-<!-- Stockage des données du membre avec id -->
-<div id="member-data"
-     data-firstname="{{ member.firstname }}"
-     data-name="{{ member.name }}"
-     data-member-id="{{ member.id }}">
-</div>
+      const downloadButton = document.getElementById("download-button");
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Génération du QR code à partir de l'id du membre
-    const memberData = document.getElementById("member-data");
-    const memberId = memberData.getAttribute("data-member-id");
-    new QRCode(document.getElementById("qrcode"), {
-      text: memberId,
-      width: 100,
-      height: 100,
-      colorDark: "#050000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
-    });
+      downloadButton.addEventListener("click", function () {
+        // Récupérez les données du membre depuis le DOM
+        const firstName = memberData.getAttribute("data-firstname");
+        const name = memberData.getAttribute("data-name");
 
-    const downloadButton = document.getElementById("download-button");
+        // Sélectionnez le conteneur que vous souhaitez capturer
+        const element = document.getElementById("card-container");
 
-    downloadButton.addEventListener("click", function () {
-      // Récupérez les données du membre depuis le DOM
-      const firstName = memberData.getAttribute("data-firstname");
-      const name = memberData.getAttribute("data-name");
+        // Options pour html2canvas
+        const options = {
+          scale: 2, // Augmentez la résolution de l'image
+          useCORS: true, // Autorise le chargement d'images externes
+          logging: true, // Active les logs pour le débogage
+        };
 
-      // Sélectionnez le conteneur que vous souhaitez capturer
-      const element = document.getElementById("card-container");
+        // Capturez le contenu et convertissez-le en image
+        html2canvas(element, options).then((canvas) => {
+          // Dimensions du format B6
+          const targetWidth = 498;
+          const targetHeight = 708;
 
-      // Options pour html2canvas
-      const options = {
-        scale: 2, // Augmentez la résolution de l'image
-        useCORS: true, // Autorise le chargement d'images externes
-        logging: true, // Active les logs pour le débogage
-      };
+          // Créez un nouveau canvas pour redimensionner l'image
+          const resizedCanvas = document.createElement("canvas");
+          const resizedContext = resizedCanvas.getContext("2d");
 
-      // Capturez le contenu et convertissez-le en image
-      html2canvas(element, options).then((canvas) => {
-        // Dimensions du format B6
-        const targetWidth = 498;
-        const targetHeight = 708;
+          // Définir les dimensions du nouveau canvas
+          resizedCanvas.width = targetWidth;
+          resizedCanvas.height = targetHeight;
 
-        // Créez un nouveau canvas pour redimensionner l'image
-        const resizedCanvas = document.createElement("canvas");
-        const resizedContext = resizedCanvas.getContext("2d");
+          // Calculer les proportions pour redimensionner l'image
+          const ratio = Math.min(
+                  targetWidth / canvas.width,
+                  targetHeight / canvas.height
+          );
+          const newWidth = canvas.width * ratio;
+          const newHeight = canvas.height * ratio;
 
-        // Définir les dimensions du nouveau canvas
-        resizedCanvas.width = targetWidth;
-        resizedCanvas.height = targetHeight;
+          // Centrer l'image sur le nouveau canvas
+          const offsetX = (targetWidth - newWidth) / 2;
+          const offsetY = (targetHeight - newHeight) / 2;
 
-        // Calculer les proportions pour redimensionner l'image
-        const ratio = Math.min(
-                targetWidth / canvas.width,
-                targetHeight / canvas.height
-        );
-        const newWidth = canvas.width * ratio;
-        const newHeight = canvas.height * ratio;
+          // Remplir le fond avec du blanc
+          resizedContext.fillStyle = "white";
+          resizedContext.fillRect(0, 0, targetWidth, targetHeight);
 
-        // Centrer l'image sur le nouveau canvas
-        const offsetX = (targetWidth - newWidth) / 2;
-        const offsetY = (targetHeight - newHeight) / 2;
+          // Redimensionner et dessiner l'image capturée
+          resizedContext.drawImage(
+                  canvas,
+                  0,
+                  0,
+                  canvas.width,
+                  canvas.height,
+                  offsetX,
+                  offsetY,
+                  newWidth,
+                  newHeight
+          );
 
-        // Remplir le fond avec du blanc
-        resizedContext.fillStyle = "white";
-        resizedContext.fillRect(0, 0, targetWidth, targetHeight);
+          // Convertissez le canvas redimensionné en image PNG
+          const imgData = resizedCanvas.toDataURL("image/png");
 
-        // Redimensionner et dessiner l'image capturée
-        resizedContext.drawImage(
-                canvas,
-                0,
-                0,
-                canvas.width,
-                canvas.height,
-                offsetX,
-                offsetY,
-                newWidth,
-                newHeight
-        );
+          // Créez un lien de téléchargement
+          const link = document.createElement("a");
+          link.href = imgData;
 
-        // Convertissez le canvas redimensionné en image PNG
-        const imgData = resizedCanvas.toDataURL("image/png");
+          // Nom du fichier téléchargé en utilisant le nom du membre
+          const fileName = `${firstName}_${name}.png`;
+          link.download = fileName;
 
-        // Créez un lien de téléchargement
-        const link = document.createElement("a");
-        link.href = imgData;
-
-        // Nom du fichier téléchargé en utilisant le nom du membre
-        const fileName = `${firstName}_${name}.png`;
-        link.download = fileName;
-
-        // Déclencher le téléchargement
-        link.click();
+          // Déclencher le téléchargement
+          link.click();
+        });
       });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

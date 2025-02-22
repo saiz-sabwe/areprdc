@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,6 @@
     </button>
   </div>
 {% endif %}
-
 <!-- Stockage des données du membre -->
 <div id="member-data"
      data-firstname="{{ member.firstname }}"
@@ -28,12 +27,12 @@
      data-member-id="{{ member.id }}">
 </div>
 
-<!-- Conteneur principal centré sur la page -->
 <div class="flex items-center justify-center min-h-screen bg-gray-400">
-  <!-- Carte en colonne avec hauteur fixe -->
-  <div class="h-[519px] w-[732px] bg-white flex flex-col" id="card-container">
-    <!-- BANNIÈRE (header) -->
-    <div class="h-[130px] bg-gradient-to-bl from-gray-50 to-gray-200 flex items-center justify-center gap-8">
+  <div class="h-[519px] w-[732px] bg-white relative overflow-hidden" id="card-container">
+    <!-- the banner -->
+    <div
+            class="h-[130px] bg-gradient-to-bl from-gray-50 to-gray-200 flex items-center justify-center gap-8"
+    >
       <div>
         <img
                 src="{{ asset('assets/img/card/LOGO.png') }}"
@@ -55,26 +54,26 @@
       </div>
     </div>
 
-    <!-- CORPS PRINCIPAL -->
-    <div class="flex-1 flex items-start gap-4 pt-3">
+    <!-- the main body -->
+    <div class="h-[calc(100%-180px)] flex items-start gap-4 pt-2">
       <div class="w-[70%] px-5 text-[#002494] text-3xl font-medium">
         <div>Nom : {{ member.name }}</div>
         <div>Post-Nom : {{ member.lastname }}</div>
         <div>Prénom : {{ member.firstname }}</div>
+        <div>Fonction :</div>
         <div>Sexe : {{ member.gender }}</div>
         <div>Adresse :</div>
         <div>Fédération : {{ member.address.federation }}</div>
-        <div>Délivrée :</div>
+        <div>Expiration :</div>
         <div>Code : {{ member.reference }}</div>
       </div>
-      <div class="w-[30%] px-6 flex flex-col items-center justify-center gap-3">
-        <div class="h-[180px] w-full border-2 border-[#002494] overflow-hidden">
-          <!-- Photo de profil -->
-          {#          <img#}
-          {#                  src="{{ asset('assets/img/card/pic.jpg') }}"#}
-          {#                  alt=""#}
-          {#                  class="w-full h-full object-cover"#}
-          {#          />#}
+      <div
+              class="w-[30%] px-6 flex flex-col items-center justify-center gap-3"
+      >
+        <div
+                class="h-[180px] w-full border-2 border-[#002494] overflow-hidden"
+        >
+          <!-- the profile pic goes here -->
           {% if member.imageName %}
             <img src="{{ asset('uploads/members/' ~ member.imageName) }}" alt="Photo de profil" class="w-full h-full object-cover" />
           {% else %}
@@ -83,18 +82,18 @@
         </div>
         <!-- Modification du container du QR code pour lui donner une taille adaptée et une marge en bas -->
         <div id="qrcode" class="w-[128px] h-[128px] mb-4"></div>
+
       </div>
     </div>
 
-    <!-- FOOTER avec hauteur fixe -->
-    <div class="h-[60px] bg-gradient-to-r from-[#002494] to-[#05133F] text-white flex items-center justify-center">
-      <div class="text-3xl font-bold uppercase leading-none">
-        Membre effectif
-      </div>
+    <!-- the footer -->
+    <div
+            class="h-[50px] bg-gradient-to-r from-[#002494] to-[#05133F] text-white flex items-center justify-center text-center"
+    >
+      <div class="text-3xl font-bold uppercase">Membre effectif</div>
     </div>
   </div>
 </div>
-
 <!-- Script de capture, redimensionnement, téléchargement et génération du QR code -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
