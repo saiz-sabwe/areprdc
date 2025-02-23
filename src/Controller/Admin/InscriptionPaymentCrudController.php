@@ -52,7 +52,13 @@ class InscriptionPaymentCrudController extends AbstractCrudController
             IntegerField::new('amount'),
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
             TextField::new('reference'),
-            AssociationField::new('enrollee', 'Membre'),
+            AssociationField::new('enrollee', 'Membre')
+                ->setFormTypeOptions([
+                'query_builder' => function (MemberRepository $er) {
+                    return $er->findMemberExpired();
+                },
+            ])
+                ->setFormTypeOption('placeholder', 'Sélectionnez un membre'),
         ];
     }
 
@@ -80,12 +86,17 @@ class InscriptionPaymentCrudController extends AbstractCrudController
 
             if ($member) {
                 $member->setStatus(200); // Modifier son statut à 200
+//                $member->setDeliverededAt(new \DateTimeImmutable());
+//                $member->setExpiredAt((new \DateTimeImmutable())->modify('+1 year'));
+
                 $this->entityManager->persist($member);
+
                 $this->entityManager->flush(); // Sauvegarder immédiatement les changements
             }
         }
 
-        $payment->setCreatedAt(new \DateTimeImmutable()); // Définir la date actuelle
+        $payment->setCreatedAt(new \DateTimeImmutable());
+
         return $payment;
     }
 

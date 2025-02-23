@@ -101,6 +101,12 @@ class Member
     #[ORM\ManyToOne]
     private ?Position $position = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deliveredAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $expiredAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -406,5 +412,29 @@ class Member
     public function setImageName(?string $imageName): void
     {
         $this->imageName = $imageName;
+    }
+
+    public function getDeliveredAt(): ?\DateTimeImmutable
+    {
+        return $this->deliveredAt;
+    }
+
+    public function setDeliveredAt(?\DateTimeImmutable $deliveredAt): static
+    {
+        $this->deliveredAt = $deliveredAt;
+
+        return $this;
+    }
+
+    public function getExpiredAt(): ?\DateTimeImmutable
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiredAt(?\DateTimeImmutable $expiredAt): static
+    {
+        $this->expiredAt = $expiredAt;
+
+        return $this;
     }
 }

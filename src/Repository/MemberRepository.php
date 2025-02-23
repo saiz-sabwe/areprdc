@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\InscriptionPayment;
 use App\Entity\Member;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,6 +16,16 @@ class MemberRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Member::class);
     }
+
+    public function findMemberExpired()
+    {
+
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.expiredAt > :now OR m.expiredAt IS NULL')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('m.id', 'ASC');
+    }
+
 
 //    /**
 //     * @return Member[] Returns an array of Member objects

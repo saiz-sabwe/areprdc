@@ -133,4 +133,5 @@ class InscriptionPayment
 
         return $this;
     }
+
 }

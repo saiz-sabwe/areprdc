@@ -58,17 +58,5 @@ final class MemberController extends AbstractController
             'member' => $member,
         ]);
 
-
-        if ($member->getMemberCategory()->getLabel() === "effectif") {
-            return $this->render('card/effectif.html.twig', [
-                'member' => $member,
-            ]);
-        } else {
-            return $this->render('card/honneur.html.twig', [
-                'member' => $member,
-            ]);
-
-        }
-
     }
 }

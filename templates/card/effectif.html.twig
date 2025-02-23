@@ -60,11 +60,11 @@
         <div>Nom : {{ member.name }}</div>
         <div>Post-Nom : {{ member.lastname }}</div>
         <div>Prénom : {{ member.firstname }}</div>
-        <div>Fonction :</div>
+        <div>Fonction : {{ member.position }}</div>
         <div>Sexe : {{ member.gender }}</div>
-        <div>Adresse :</div>
+        <div>Adresse : {{ member.address.avenue }} N°{{ member.address.number }} C/{{ member.address.municipality }} </div>
         <div>Fédération : {{ member.address.federation }}</div>
-        <div>Expiration :</div>
+        <div>Expiration : {{ member.expiredAt|date('d /m /Y') }}</div>
         <div>Code : {{ member.reference }}</div>
       </div>
       <div
@@ -113,11 +113,11 @@
     const downloadButton = document.getElementById("download-button");
 
     downloadButton.addEventListener("click", function () {
-      // Récupération des données du membre
+      // Récupérez les données du membre depuis le DOM
       const firstName = memberData.getAttribute("data-firstname");
       const name = memberData.getAttribute("data-name");
 
-      // Sélection du conteneur à capturer
+      // Sélectionnez le conteneur que vous souhaitez capturer
       const element = document.getElementById("card-container");
 
       // Options pour html2canvas
@@ -129,62 +129,96 @@
 
       // Capturez le contenu et convertissez-le en image
       html2canvas(element, options).then((canvas) => {
-        // Dimensions du format B6
-        const targetWidth = 708;
-        const targetHeight = 498;
-
-        // Créez un nouveau canvas pour redimensionner l'image
-        const resizedCanvas = document.createElement("canvas");
-        const resizedContext = resizedCanvas.getContext("2d");
-
-        // Définir les dimensions du nouveau canvas
-        resizedCanvas.width = targetWidth;
-        resizedCanvas.height = targetHeight;
-
-        // Calculer les proportions pour redimensionner l'image
-        const ratio = Math.min(
-                targetWidth / canvas.width,
-                targetHeight / canvas.height
-        );
-        const newWidth = canvas.width * ratio;
-        const newHeight = canvas.height * ratio;
-
-        // Centrer l'image sur le nouveau canvas
-        const offsetX = (targetWidth - newWidth) / 2;
-        const offsetY = (targetHeight - newHeight) / 2;
-
-        // Remplir le fond avec du blanc
-        resizedContext.fillStyle = "white";
-        resizedContext.fillRect(0, 0, targetWidth, targetHeight);
-
-        // Redimensionner et dessiner l'image capturée
-        resizedContext.drawImage(
-                canvas,
-                0,
-                0,
-                canvas.width,
-                canvas.height,
-                offsetX,
-                offsetY,
-                newWidth,
-                newHeight
-        );
-
-        // Convertissez le canvas redimensionné en image PNG
-        const imgData = resizedCanvas.toDataURL("image/png");
+        // Convertissez le canvas en image PNG
+        const imgData = canvas.toDataURL("image/png");
 
         // Créez un lien de téléchargement
         const link = document.createElement("a");
         link.href = imgData;
 
         // Nom du fichier téléchargé en utilisant le nom du membre
-        const fileName = `${firstName}_${name}.png`; // Par exemple : "John_Doe.png"
+        const fileName = `${firstName}_${name}.png`;
         link.download = fileName;
 
         // Déclencher le téléchargement
         link.click();
       });
     });
+
+
+    // downloadButton.addEventListener("click", function () {
+    //   // Récupération des données du membre
+    //   const firstName = memberData.getAttribute("data-firstname");
+    //   const name = memberData.getAttribute("data-name");
+    //
+    //   // Sélection du conteneur à capturer
+    //   const element = document.getElementById("card-container");
+    //
+    //   // Options pour html2canvas
+    //   const options = {
+    //     scale: 2, // Augmentez la résolution de l'image
+    //     useCORS: true, // Autorise le chargement d'images externes
+    //     logging: true, // Active les logs pour le débogage
+    //   };
+    //
+    //   // Capturez le contenu et convertissez-le en image
+    //   html2canvas(element, options).then((canvas) => {
+    //     // Dimensions du format B6
+    //     const targetWidth = 708;
+    //     const targetHeight = 498;
+    //
+    //     // Créez un nouveau canvas pour redimensionner l'image
+    //     const resizedCanvas = document.createElement("canvas");
+    //     const resizedContext = resizedCanvas.getContext("2d");
+    //
+    //     // Définir les dimensions du nouveau canvas
+    //     resizedCanvas.width = targetWidth;
+    //     resizedCanvas.height = targetHeight;
+    //
+    //     // Calculer les proportions pour redimensionner l'image
+    //     const ratio = Math.min(
+    //             targetWidth / canvas.width,
+    //             targetHeight / canvas.height
+    //     );
+    //     const newWidth = canvas.width * ratio;
+    //     const newHeight = canvas.height * ratio;
+    //
+    //     // Centrer l'image sur le nouveau canvas
+    //     const offsetX = (targetWidth - newWidth) / 2;
+    //     const offsetY = (targetHeight - newHeight) / 2;
+    //
+    //     // Remplir le fond avec du blanc
+    //     resizedContext.fillStyle = "white";
+    //     resizedContext.fillRect(0, 0, targetWidth, targetHeight);
+    //
+    //     // Redimensionner et dessiner l'image capturée
+    //     resizedContext.drawImage(
+    //             canvas,
+    //             0,
+    //             0,
+    //             canvas.width,
+    //             canvas.height,
+    //             offsetX,
+    //             offsetY,
+    //             newWidth,
+    //             newHeight
+    //     );
+    //
+    //     // Convertissez le canvas redimensionné en image PNG
+    //     const imgData = resizedCanvas.toDataURL("image/png");
+    //
+    //     // Créez un lien de téléchargement
+    //     const link = document.createElement("a");
+    //     link.href = imgData;
+    //
+    //     // Nom du fichier téléchargé en utilisant le nom du membre
+    //     const fileName = `${firstName}_${name}.png`; // Par exemple : "John_Doe.png"
+    //     link.download = fileName;
+    //
+    //     // Déclencher le téléchargement
+    //     link.click();
+    //   });
+    // });
   });
 </script>
 </body>
