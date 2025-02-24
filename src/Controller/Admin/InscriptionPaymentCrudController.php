@@ -46,11 +46,10 @@ class InscriptionPaymentCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->onlyOnIndex(),
-            AssociationField::new('mode', 'Mode de Paiement'),
-            AssociationField::new('currency', 'Devise')
-                ->setRequired(true),
-            IntegerField::new('amount'),
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            IntegerField::new('amount'),
+            AssociationField::new('currency', 'Devise')->setRequired(true),
+            AssociationField::new('mode', 'Mode de Paiement'),
             TextField::new('reference'),
             AssociationField::new('enrollee', 'Membre')
                 ->setFormTypeOptions([

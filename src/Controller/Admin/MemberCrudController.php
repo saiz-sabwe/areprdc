@@ -48,6 +48,7 @@ class MemberCrudController extends AbstractCrudController
             // --- Informations sur le membre ---
             FormField::addPanel('Identité du membre')->collapsible(),
             IdField::new('id')->hideOnForm()->hideOnIndex(),
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
 
             TextField::new('reference', 'Numéro')
                 ->setFormTypeOption('disabled', true)
@@ -90,8 +91,6 @@ class MemberCrudController extends AbstractCrudController
                 ->setRequired(false)
                 ->hideOnIndex(),
 
-            // --- Métadonnées ---
-            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
             DateTimeField::new('updatedAt', 'Dernière mise à jour')->onlyOnDetail(),
 
             FormField::addPanel('Origine du membre')->collapsible(),
