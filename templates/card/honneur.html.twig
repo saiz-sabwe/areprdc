@@ -71,18 +71,18 @@
     </div>
 
       <!-- the qr code section -->
-      <div class="w-[100px] h-[100px] m-auto mt-[10px]">
+      <div class="w-[100px] h-[100px] m-auto mt-[15px]">
         <div id="qrcode" class="w-full h-full object-cover"></div>
       </div>
 
 
       <!-- the footer -->
       {% set imagePath = '' %}
-      {% if member.memberCategory.label == 'honneur gold' %}
+      {% if member.memberCategory.label == "HONNEUR GOLD" %}
         {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
-      {% elseif member.memberCategory.label == 'honneur diamond' %}
+      {% elseif member.memberCategory.label ==  "HONNEUR DIAMANT" %}
         {% set imagePath = 'assets/img/card/HONNEUR_DIAMANT.png' %}
-      {% elseif member.memberCategory.label == 'honneur argent' %}
+      {% elseif member.memberCategory.label == "HONNEUR ARGENT" %}
         {% set imagePath = 'assets/img/card/HONNEUR-ARGENT.png' %}
       {% endif %}
       <div class="h-[54px]">
