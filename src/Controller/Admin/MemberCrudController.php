@@ -65,8 +65,15 @@ class MemberCrudController extends AbstractCrudController
 
             TextField::new('firstname', 'Prénom')->setRequired(true),
             TextField::new('name', 'Nom')->setRequired(true),
-            TextField::new('lastname', 'Postnom')->setRequired(true)
-                ->onlyOnForms(),
+            TextField::new('lastname', 'Postnom')
+                ->setRequired(true)
+                ->hideOnIndex(),
+            DateTimeField::new('deliveredAt', 'Date livraison')
+                ->setRequired(true)
+                ->onlyOnDetail(),
+            DateTimeField::new('expiredAt', 'Date d\'expiration')
+                ->setRequired(true)
+                ->onlyOnDetail(),
             ChoiceField::new('gender', 'Sexe')
                 ->setChoices(['Homme' => 'M', 'Femme' => 'F'])
                 ->setRequired(true),
@@ -82,6 +89,10 @@ class MemberCrudController extends AbstractCrudController
             DateTimeField::new('dateOfBirth', 'Date de naissance')
                 ->setRequired(false)
                 ->hideOnIndex(),
+
+            // --- Métadonnées ---
+            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
+            DateTimeField::new('updatedAt', 'Dernière mise à jour')->onlyOnDetail(),
 
             FormField::addPanel('Origine du membre')->collapsible(),
             AssociationField::new('memberCategory', 'Catégorie')
@@ -124,10 +135,6 @@ class MemberCrudController extends AbstractCrudController
                 ->setRequired(true)
                 ->setCrudController(FederationCrudController::class)
                 ->hideOnIndex(),
-
-            // --- Métadonnées ---
-            DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
-            DateTimeField::new('updatedAt', 'Dernière mise à jour')->onlyOnDetail(),
 
             UrlField::new('email', 'Carte')
                 ->setVirtual(true)
@@ -174,6 +181,20 @@ class MemberCrudController extends AbstractCrudController
         }
         return parent::edit($context);
     }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof Member) {
+            return;
+        }
+
+        // Mise à jour de la date de modification
+        $entityInstance->setUpdatedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
+    }
+
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {

@@ -86,12 +86,13 @@ class InscriptionPaymentCrudController extends AbstractCrudController
 
             if ($member) {
                 $member->setStatus(200); // Modifier son statut à 200
-//                $member->setDeliverededAt(new \DateTimeImmutable());
-//                $member->setExpiredAt((new \DateTimeImmutable())->modify('+1 year'));
+                $member->setUpdatedAt(new \DateTimeImmutable());
+                $member->setDeliveredAt(new \DateTimeImmutable());
+                $member->setExpiredAt((new \DateTimeImmutable())->modify('+1 year'));
 
                 $this->entityManager->persist($member);
 
-                $this->entityManager->flush(); // Sauvegarder immédiatement les changements
+            //    $this->entityManager->flush(); // Sauvegarder immédiatement les changements
             }
         }
 

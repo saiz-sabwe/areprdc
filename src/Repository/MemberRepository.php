@@ -21,7 +21,7 @@ class MemberRepository extends ServiceEntityRepository
     {
 
         return $this->createQueryBuilder('m')
-            ->andWhere('m.expiredAt > :now OR m.expiredAt IS NULL')
+            ->andWhere('m.expiredAt < :now OR m.expiredAt IS NULL')
             ->setParameter('now', new \DateTimeImmutable())
             ->orderBy('m.id', 'ASC');
     }

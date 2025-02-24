@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Service\InscriptionPaymentService;
 use App\Service\MemberService;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -16,11 +17,13 @@ final class MemberController extends AbstractController
 {
 
     private MemberService $memberService;
+    private InscriptionPaymentService $inscriptionPaymentService;
     private LoggerInterface $logger;
 
-    public function __construct(MemberService $memberService, LoggerInterface $logger)
+    public function __construct(MemberService $memberService, LoggerInterface $logger, InscriptionPaymentService $inscriptionPaymentService)
     {
         $this->memberService = $memberService;
+        $this->inscriptionPaymentService = $inscriptionPaymentService;
         $this->logger = $logger;
     }
 
@@ -54,8 +57,15 @@ final class MemberController extends AbstractController
     public function generateMemberFiche(Member $member): Response
     {
 
+
+        $inscriptionPayment = $this->inscriptionPaymentService->getByDateDelivered($member);
+
+        $this->logger->info("<<< inscriptionPayment value :", ["inscriptionPayment"=>$inscriptionPayment->getEnrollee()]);
+
+
         return $this->render('card/fiche.html.twig', [
             'member' => $member,
+            'inscriptionPayment' => $inscriptionPayment,
         ]);
 
     }
