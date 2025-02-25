@@ -31,7 +31,6 @@
   <!-- Intégration de html2canvas et jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </head>
 <body>
 <!-- Bouton pour déclencher le téléchargement du PDF -->
@@ -44,7 +43,7 @@
 {% endif %}
 <div class="flex items-center justify-center min-h-screen bg-gray-400 p-6">
   <div
-          id="pdf-container"  class="w-[1000px] h-[1415px] bg-white relative overflow-hidden p-10 flex items-center justify-center"
+          id="pdf-container" class="w-[1000px] h-[1415px] bg-white relative overflow-hidden p-10 flex items-center justify-center"
   >
     <div
             class="w-full h-full flex items-center justify-center bg-[#002161] p-[12px]"
@@ -155,7 +154,7 @@
               <div>Niveau d’étude : {{ member.education }}<span></span></div>
               <div>
                 Fonction ou occupation actuelle au parti
-                <span class="font-bold">AREP</span> : <span>{{ member.position.description }}</span>
+                <span class="font-bold">AREP</span> : <span>{{ member.position }}</span>
               </div>
               <div>
                 Parti ou regroupement politique auquel vous apparteniez :
@@ -166,7 +165,9 @@
                 Montant en <span class="font-bold">USD</span> ou
                 <span class="font-bold">CDF</span> :  {{ inscriptionPayment.amount }}  {{ inscriptionPayment.currency.acronym }}<span></span>
               </div>
-              <div>Numéro de bordereau : {{ inscriptionPayment.reference }} <span></span></div>
+              <div>
+                Numéro de bordereau : {{ inscriptionPayment.reference }} <span></span>
+              </div>
             </div>
           </div>
 

@@ -26,7 +26,6 @@
      data-name="{{ member.name }}"
      data-member-id="{{ member.id }}">
 </div>
-
 <div class="flex items-center justify-center min-h-screen bg-gray-400">
   <div class="h-[519px] w-[732px] bg-white relative overflow-hidden" id="card-container">
     <!-- the banner -->
@@ -55,12 +54,14 @@
     </div>
 
     <!-- the main body -->
-    <div class="h-[calc(100%-180px)] flex items-start gap-4 pt-2">
-      <div class="w-[70%] px-5 text-[#002494] text-3xl font-medium">
+    <div class="h-[calc(100%-175px)] flex items-start gap-4 pt-2">
+      <div
+              class="w-[70%] px-5 text-[#002494] text-[30px]/[32px] font-semibold uppercase"
+      >
         <div>Nom : {{ member.name }}</div>
         <div>Post-Nom : {{ member.lastname }}</div>
         <div>Prénom : {{ member.firstname }}</div>
-        <div>Fonction : {{ member.position.description }}</div>
+        <div>Fonction : {{ member.position }}</div>
         <div>Sexe : {{ member.gender }}</div>
         <div>Adresse : {{ member.address.avenue }} N°{{ member.address.number }} {% if member.address.municipality is not null %}C/{{ member.address.municipality }}{% endif %}</div>
         <div>Fédération : {{ member.address.federation }}</div>
@@ -80,17 +81,21 @@
             <img src="{{ asset('assets/img/card/pic.jpg')  }}" alt="Image par défaut" class="w-full h-full object-cover" />
           {% endif %}
         </div>
-        <!-- Modification du container du QR code pour lui donner une taille adaptée et une marge en bas -->
-        <div id="qrcode" class="w-[128px] h-[128px] mb-4"></div>
-
+        <div class="w-[75%] h-[100px] overflow-hidden">
+          <div id="qrcode" class="w-[128px] h-[128px] mb-4"></div>
+        </div>
       </div>
     </div>
 
     <!-- the footer -->
     <div
-            class="h-[50px] bg-gradient-to-r from-[#002494] to-[#05133F] text-white flex items-center justify-center text-center"
+            class="h-[45px] bg-[#130A77] text-white flex items-center justify-center text-center py-2"
     >
-      <div class="text-3xl font-bold uppercase">Membre effectif</div>
+      <img
+              src="{{ asset('assets/img/card/MEMBRE-EFFECTIF.png') }}"
+              class="h-full w-auto"
+              alt=""
+      />
     </div>
   </div>
 </div>
