@@ -61,7 +61,7 @@
         <div>Nom : {{ member.name }}</div>
         <div>Post-Nom : {{ member.lastname }}</div>
         <div>Prénom : {{ member.firstname }}</div>
-        <div>Fonction : {{ member.position }}</div>
+        <div>Fonction : {{ member.position.label }}</div>
         <div>Sexe : {{ member.gender }}</div>
         <div>Adresse : {{ member.address.avenue }} N°{{ member.address.number }} {% if member.address.municipality is not null %}C/{{ member.address.municipality }}{% endif %}</div>
         <div>Fédération : {{ member.address.federation }}</div>
