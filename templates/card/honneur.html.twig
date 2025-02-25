@@ -79,11 +79,11 @@
       {% set imagePath = '' %}
 
       {% if member.memberCategory.label == "HONNEUR GOLD" %}
-        {% set imagePath = 'assets/img/card/GOLD-OK.png' %}
+        {% set imagePath = 'assets/img/card/GOLD.png' %}
       {% elseif member.memberCategory.label ==  "HONNEUR DIAMANT" %}
-        {% set imagePath = 'assets/img/card/HONNEUR_DIAMANT.png' %}
+        {% set imagePath = 'assets/img/card/DIAMANT.png' %}
       {% elseif member.memberCategory.label == "HONNEUR ARGENT" %}
-        {% set imagePath = 'assets/img/card/HONNEUR-ARGENT.png' %}
+        {% set imagePath = 'assets/img/card/ARGENT.png' %}
       {% endif %}
 
       {% if imagePath is not empty %}
