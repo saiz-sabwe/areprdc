@@ -29,6 +29,7 @@ class MemberCategoryCrudController extends AbstractCrudController
 
         // Pour les comptes Admin, on autorise toutes les actions.
         return $actions
+            ->add(Action::NEW, Action::EDIT, Action::DELETE)
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_NEW, Action::INDEX);
     }
