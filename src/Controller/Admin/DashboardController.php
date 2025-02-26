@@ -61,8 +61,7 @@ class DashboardController extends AbstractDashboardController
         }
 
         // "Utilisateur" (comptes admin) accessible uniquement au COMPTE ADMIN
-        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user-cog', User::class)
-            ->setPermission('ROLE_ADMIN');
+        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user-cog', User::class);
 
         // ============================
         // Gestion Caisse
