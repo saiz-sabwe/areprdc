@@ -35,24 +35,27 @@ class MemberCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_NEW, Action::INDEX);
         // Règles de permission :
         // - ROLE_ADMIN : accès complet
         // - ROLE_SERVICE_ADHESION : accès en création et modification (mais suppression interdite)
         // - Tous les autres rôles : accès en lecture seule (uniquement DETAIL)
-        if ($this->isGranted('ROLE_ADMIN')) {
-            return $actions
-                ->add(Crud::PAGE_INDEX, Action::DETAIL)
-                ->add(Crud::PAGE_NEW, Action::INDEX);
-        } elseif ($this->isGranted('ROLE_SERVICE_ADHESION')) {
-            return $actions
-                ->disable(Action::DELETE)
-                ->add(Crud::PAGE_INDEX, Action::DETAIL)
-                ->add(Crud::PAGE_NEW, Action::INDEX);
-        } else {
-            return $actions
-                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
-                ->add(Crud::PAGE_INDEX, Action::DETAIL);
-        }
+//        if ($this->isGranted('ROLE_ADMIN')) {
+//            return $actions
+//                ->add(Crud::PAGE_INDEX, Action::DETAIL)
+//                ->add(Crud::PAGE_NEW, Action::INDEX);
+//        } elseif ($this->isGranted('ROLE_SERVICE_ADHESION')) {
+//            return $actions
+//                ->disable(Action::DELETE)
+//                ->add(Crud::PAGE_INDEX, Action::DETAIL)
+//                ->add(Crud::PAGE_NEW, Action::INDEX);
+//        } else {
+//            return $actions
+//                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
+//                ->add(Crud::PAGE_INDEX, Action::DETAIL);
+//        }
     }
 
     public function configureFields(string $pageName): iterable
