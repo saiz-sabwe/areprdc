@@ -48,19 +48,21 @@ class DashboardController extends AbstractDashboardController
         // Le menu "Membre" doit être visible pour tous les rôles autorisés à consulter la liste :
         // SECRETAIRE GENERAL, COMPTABLE, CHEF FINANCE, IMPLANTATION DU PARTI,
         // SERVICE D’ADHESION, SERVICE CLIENT ainsi que l’ADMIN.
-        if (
-            $this->isGranted('ROLE_ADMIN') ||
-            $this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
-            $this->isGranted('ROLE_COMPTABLE') ||
-            $this->isGranted('ROLE_CHEF_FINANCE') ||
-            $this->isGranted('ROLE_IMPLANTATION_PARTI') ||
-            $this->isGranted('ROLE_SERVICE_ADHESION') ||
-            $this->isGranted('ROLE_SERVICE_CLIENT')
-        ) {
-            yield MenuItem::linkToCrud('Membre', 'fas fa-users', Member::class);
-        }
+//        if (
+//            $this->isGranted('ROLE_ADMIN') ||
+//            $this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
+//            $this->isGranted('ROLE_COMPTABLE') ||
+//            $this->isGranted('ROLE_CHEF_FINANCE') ||
+//            $this->isGranted('ROLE_IMPLANTATION_PARTI') ||
+//            $this->isGranted('ROLE_SERVICE_ADHESION') ||
+//            $this->isGranted('ROLE_SERVICE_CLIENT')
+//        ) {
+//            yield MenuItem::linkToCrud('Membre', 'fas fa-users', Member::class);
+//        }
+        yield MenuItem::linkToCrud('Membre', 'fas fa-users', Member::class);
 
         // "Utilisateur" (comptes admin) accessible uniquement au COMPTE ADMIN
+//        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user-cog', User::class)->setPermission('ROLE_ADMIN');
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user-cog', User::class);
 
         // ============================
