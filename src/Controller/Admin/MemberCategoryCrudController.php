@@ -21,11 +21,11 @@ class MemberCategoryCrudController extends AbstractCrudController
     {
         // Pour les utilisateurs NON-admin (Secrétaire général, Comptable, Chef Finance, etc.)
         // on désactive les actions de création, édition et suppression.
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $actions
-                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
-                ->add(Crud::PAGE_INDEX, Action::DETAIL);
-        }
+//        if (!$this->isGranted('ROLE_ADMIN')) {
+//            return $actions
+//                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
+//                ->add(Crud::PAGE_INDEX, Action::DETAIL);
+//        }
 
         // Pour les comptes Admin, on autorise toutes les actions.
         return $actions
