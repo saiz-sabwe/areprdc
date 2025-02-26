@@ -23,8 +23,11 @@ class InscriptionPaymentCrudController extends AbstractCrudController
     private MemberRepository $memberRepository;
     private RequestStack $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, MemberRepository $memberRepository, RequestStack $requestStack)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MemberRepository $memberRepository,
+        RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
         $this->memberRepository = $memberRepository;
         $this->requestStack = $requestStack;
@@ -37,6 +40,16 @@ class InscriptionPaymentCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        // Si l'utilisateur connecté n'est pas admin,
+        // on désactive les actions NEW, EDIT et DELETE afin de n'autoriser
+        // que la consultation (via DETAIL).
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $actions
+                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
+                ->add(Crud::PAGE_INDEX, Action::DETAIL);
+        }
+
+        // Pour le compte Admin, toutes les actions sont autorisées.
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->add(Crud::PAGE_NEW, Action::INDEX);
@@ -48,21 +61,23 @@ class InscriptionPaymentCrudController extends AbstractCrudController
             IdField::new('id')->onlyOnIndex(),
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
             IntegerField::new('amount'),
+            // Si besoin, vous pouvez formater le MoneyField selon votre devise
+            MoneyField::new('amount', 'Montant')->setCurrency('EUR'),
             AssociationField::new('currency', 'Devise')->setRequired(true),
             AssociationField::new('mode', 'Mode de Paiement'),
             TextField::new('reference'),
             AssociationField::new('enrollee', 'Membre')
                 ->setFormTypeOptions([
-                'query_builder' => function (MemberRepository $er) {
-                    return $er->findMemberExpired();
-                },
-            ])
+                    'query_builder' => function (MemberRepository $er) {
+                        return $er->findMemberExpired();
+                    },
+                ])
                 ->setFormTypeOption('placeholder', 'Sélectionnez un membre'),
         ];
     }
 
     /**
-     * Méthode appelée lors de la création d'un paiement d'inscription
+     * Méthode appelée lors de la création d'un paiement d'inscription.
      */
     public function createEntity(string $entityFqcn)
     {
@@ -76,11 +91,11 @@ class InscriptionPaymentCrudController extends AbstractCrudController
         // Récupération des données envoyées dans le formulaire
         $formData = $request->request->all();
 
-        // Vérifier si le champ enrollee est bien présent dans les données envoyées
+        // Vérifier si le champ enrollee est présent dans les données envoyées
         if (isset($formData['InscriptionPayment']['enrollee'])) {
             $memberId = $formData['InscriptionPayment']['enrollee'];
 
-            // Récupérer le membre depuis le repository via Doctrine
+            // Récupérer le membre via le repository
             $member = $this->memberRepository->find($memberId);
 
             if ($member) {
@@ -90,8 +105,6 @@ class InscriptionPaymentCrudController extends AbstractCrudController
                 $member->setExpiredAt((new \DateTimeImmutable())->modify('+1 year'));
 
                 $this->entityManager->persist($member);
-
-            //    $this->entityManager->flush(); // Sauvegarder immédiatement les changements
             }
         }
 
@@ -101,7 +114,7 @@ class InscriptionPaymentCrudController extends AbstractCrudController
     }
 
     /**
-     * Méthode pour sauvegarder la modification du statut du membre
+     * Méthode pour sauvegarder la modification du statut du membre.
      */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {

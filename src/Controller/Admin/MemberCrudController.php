@@ -8,6 +8,7 @@ use App\Entity\Federation;
 use App\Entity\Member;
 use App\Controller\Admin\CityCrudController;
 use App\Controller\Admin\FederationCrudController;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -23,9 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
-use Doctrine\ORM\EntityManagerInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
-use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class MemberCrudController extends AbstractCrudController
 {
@@ -36,11 +35,25 @@ class MemberCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_NEW, Action::INDEX);
+        // Règles de permission :
+        // - ROLE_ADMIN : accès complet
+        // - ROLE_SERVICE_ADHESION : accès en création et modification (mais suppression interdite)
+        // - Tous les autres rôles : accès en lecture seule (uniquement DETAIL)
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $actions
+                ->add(Crud::PAGE_INDEX, Action::DETAIL)
+                ->add(Crud::PAGE_NEW, Action::INDEX);
+        } elseif ($this->isGranted('ROLE_SERVICE_ADHESION')) {
+            return $actions
+                ->disable(Action::DELETE)
+                ->add(Crud::PAGE_INDEX, Action::DETAIL)
+                ->add(Crud::PAGE_NEW, Action::INDEX);
+        } else {
+            return $actions
+                ->disable(Action::NEW, Action::EDIT, Action::DELETE)
+                ->add(Crud::PAGE_INDEX, Action::DETAIL);
+        }
     }
-
 
     public function configureFields(string $pageName): iterable
     {
@@ -53,11 +66,6 @@ class MemberCrudController extends AbstractCrudController
             TextField::new('reference', 'Numéro')
                 ->setFormTypeOption('disabled', true)
                 ->onlyOnIndex(),
-
-//            ImageField::new('imageName', 'Photo')
-//                ->setUploadDir('public/uploads/members')
-//                ->setBasePath('uploads/members')
-//                ->setRequired(false),
 
             Field::new('imageFile', 'Photo')
                 ->setFormType(VichFileType::class)
@@ -123,13 +131,11 @@ class MemberCrudController extends AbstractCrudController
             TextField::new('address.number', 'Numéro')
                 ->setRequired(true),
 
-            // Dropdown pour sélectionner une City déjà créée
             AssociationField::new('address.city', 'Ville')
                 ->setRequired(true)
                 ->setCrudController(CityCrudController::class)
                 ->hideOnIndex(),
 
-            // Dropdown pour sélectionner une Federation déjà créée
             AssociationField::new('address.federation', 'Fédération')
                 ->setRequired(true)
                 ->setCrudController(FederationCrudController::class)
@@ -169,8 +175,7 @@ class MemberCrudController extends AbstractCrudController
     }
 
     /**
-     * Lors de l'édition, si l'Address n'est pas initialisée (null), on lui affecte une nouvelle instance.
-     * Ceci évite l'erreur "PropertyAccessor requires a graph of objects..." lors de l'accès à "address.municipality".
+     * Lors de l'édition, si l'Address n'est pas initialisée, on lui affecte une nouvelle instance.
      */
     public function edit(AdminContext $context)
     {
@@ -193,7 +198,6 @@ class MemberCrudController extends AbstractCrudController
         $entityManager->persist($entityInstance);
         $entityManager->flush();
     }
-
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {

@@ -107,6 +107,9 @@ class Member
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $expiredAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'partisan', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -434,6 +437,23 @@ class Member
     public function setExpiredAt(?\DateTimeImmutable $expiredAt): static
     {
         $this->expiredAt = $expiredAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        // set the owning side of the relation if necessary
+        if ($user->getPartisan() !== $this) {
+            $user->setPartisan($this);
+        }
+
+        $this->user = $user;
 
         return $this;
     }

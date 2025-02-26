@@ -26,6 +26,13 @@ class MemberRepository extends ServiceEntityRepository
             ->orderBy('m.id', 'ASC');
     }
 
+    public function findMembersNotLinked()
+    {
+        return $this->createQueryBuilder('m')
+            ->leftJoin('m.user', 'u')
+            ->where('u.id IS NULL');
+    }
+
 
 //    /**
 //     * @return Member[] Returns an array of Member objects
