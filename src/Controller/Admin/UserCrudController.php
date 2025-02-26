@@ -48,9 +48,12 @@ class UserCrudController extends AbstractCrudController
                 ->setFormType(PasswordType::class)
                 ->onlyWhenCreating(),
             ChoiceField::new('roles', 'Roles')
-//                ->setChoices($allowedRoles)
-                ->setChoices(["ROLE_ADMIN"])
+                ->setChoices([
+                    'Admin' => 'ROLE_ADMIN',
+                    'User' => 'ROLE_USER',
+                ])
                 ->allowMultipleChoices(),
+
             AssociationField::new('partisan', 'Membre')
                 ->setFormTypeOptions([
                     'query_builder' => function (MemberRepository $mr) {
