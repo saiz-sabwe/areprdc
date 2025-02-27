@@ -80,7 +80,7 @@ class UserCrudController extends AbstractCrudController
                 'Comptable'     => 'ROLE_COMPTABLE',
                 'Chef Finance'  => 'ROLE_CHEF_FINANCE',
                 'Service Adhésion'     => 'ROLE_SERVICE_ADHESION',
-                'Implantation PartI'   => 'ROLE_IMPLANTATION_PARTI',
+                'Implantation Parti'   => 'ROLE_IMPLANTATION_PARTI',
                 'Utilisateur' => 'ROLE_USER',
             ];
         } elseif (in_array('ROLE_SECRETAIRE_GENERAL', $roles, true)) {
@@ -88,7 +88,7 @@ class UserCrudController extends AbstractCrudController
                 'Comptable'     => 'ROLE_COMPTABLE',
                 'Chef Finance'  => 'ROLE_CHEF_FINANCE',
                 'Service Adhésion'     => 'ROLE_SERVICE_ADHESION',
-                'Implantation PartI'   => 'ROLE_IMPLANTATION_PARTI',
+                'Implantation Parti'   => 'ROLE_IMPLANTATION_PARTI',
                 'Utilisateur' => 'ROLE_USER',
             ];
         } elseif (in_array('ROLE_COMPTABLE', $roles, true) || in_array('ROLE_CHEF_FINANCE', $roles, true)) {
