@@ -30,6 +30,9 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
+    /**
+     * Configuration des actions EasyAdmin (ajout du bouton DETAIL, etc.)
+     */
     public function configureActions(Actions $actions): Actions
     {
         return $actions
@@ -37,6 +40,9 @@ class UserCrudController extends AbstractCrudController
             ->add(Crud::PAGE_NEW, Action::INDEX);
     }
 
+    /**
+     * Champs du formulaire EasyAdmin
+     */
     public function configureFields(string $pageName): iterable
     {
         $allowedRoles = $this->getAllowedRoles();
@@ -53,6 +59,7 @@ class UserCrudController extends AbstractCrudController
             AssociationField::new('partisan', 'Membre')
                 ->setFormTypeOptions([
                     'query_builder' => function (MemberRepository $mr) {
+                        // On affiche uniquement les membres qui ne sont pas déjà liés à un User
                         return $mr->findMembersNotLinked();
                     },
                 ]),
@@ -72,30 +79,29 @@ class UserCrudController extends AbstractCrudController
         $roles = $currentUser->getRoles();
 
         if (in_array('ROLE_ADMIN', $roles, true)) {
-            // Un administrateur ne peut créer que des utilisateurs ayant pour rôle
-            // un rôle inférieur, ici par exemple ROLE_SECRETAIRE_GENERAL.
+            // L’admin peut créer des rôles <= ADMIN
             return [
-                'Admin' => 'ROLE_ADMIN',
-                'Secrétaire Général' => 'ROLE_SECRETAIRE_GENERAL',
-                'Comptable'     => 'ROLE_COMPTABLE',
-                'Chef Finance'  => 'ROLE_CHEF_FINANCE',
+                'Admin'                => 'ROLE_ADMIN',
+                'Secrétaire Général'   => 'ROLE_SECRETAIRE_GENERAL',
+                'Comptable'            => 'ROLE_COMPTABLE',
+                'Chef Finance'         => 'ROLE_CHEF_FINANCE',
                 'Service Adhésion'     => 'ROLE_SERVICE_ADHESION',
                 'Implantation Parti'   => 'ROLE_IMPLANTATION_PARTI',
-                'Utilisateur' => 'ROLE_USER',
+                'Utilisateur'          => 'ROLE_USER',
             ];
         } elseif (in_array('ROLE_SECRETAIRE_GENERAL', $roles, true)) {
             return [
-                'Comptable'     => 'ROLE_COMPTABLE',
-                'Chef Finance'  => 'ROLE_CHEF_FINANCE',
+                'Comptable'            => 'ROLE_COMPTABLE',
+                'Chef Finance'         => 'ROLE_CHEF_FINANCE',
                 'Service Adhésion'     => 'ROLE_SERVICE_ADHESION',
                 'Implantation Parti'   => 'ROLE_IMPLANTATION_PARTI',
-                'Utilisateur' => 'ROLE_USER',
+                'Utilisateur'          => 'ROLE_USER',
             ];
         } elseif (in_array('ROLE_COMPTABLE', $roles, true) || in_array('ROLE_CHEF_FINANCE', $roles, true)) {
             return [
                 'Service Adhésion'     => 'ROLE_SERVICE_ADHESION',
                 'Implantation Parti'   => 'ROLE_IMPLANTATION_PARTI',
-                'Utilisateur' => 'ROLE_USER',
+                'Utilisateur'          => 'ROLE_USER',
             ];
         } elseif (
             in_array('ROLE_SERVICE_ADHESION', $roles, true)
@@ -110,13 +116,16 @@ class UserCrudController extends AbstractCrudController
         return [];
     }
 
+    /**
+     * Méthode appelée lors de la création (persist) d’un nouvel utilisateur
+     */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if (!$entityInstance instanceof User) {
             return;
         }
 
-        // Hash du mot de passe avant enregistrement
+        // Hash du mot de passe si renseigné
         if ($entityInstance->getPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $entityInstance,
@@ -125,7 +134,50 @@ class UserCrudController extends AbstractCrudController
             $entityInstance->setPassword($hashedPassword);
         }
 
-        // Gestion de la relation User <-> Member
+        // Lier le membre (Member) à l’utilisateur, si un Member est sélectionné
+        $member = $entityInstance->getPartisan();
+        if ($member) {
+            $member->setUser($entityInstance);
+            $entityManager->persist($member);
+        }
+
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
+    }
+
+    /**
+     * Méthode appelée lors de la modification (update) d’un utilisateur existant
+     * -> Empêche la suppression du rôle ADMIN si l’utilisateur le possédait déjà.
+     */
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof User) {
+            return;
+        }
+
+        // Rôles en BDD avant la modification
+        $originalData = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+        $oldRoles = $originalData['roles'] ?? [];
+
+        // Nouveaux rôles (après modification du formulaire)
+        $newRoles = $entityInstance->getRoles();
+
+        // Empêcher de retirer ROLE_ADMIN si l’utilisateur l’avait déjà
+        if (\in_array('ROLE_ADMIN', $oldRoles, true) && !\in_array('ROLE_ADMIN', $newRoles, true)) {
+            $newRoles[] = 'ROLE_ADMIN';
+            $entityInstance->setRoles(array_unique($newRoles));
+        }
+
+        // Re-hash du mot de passe si modifié
+        if ($entityInstance->getPassword()) {
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $entityInstance,
+                $entityInstance->getPassword()
+            );
+            $entityInstance->setPassword($hashedPassword);
+        }
+
+        // Mise à jour de la relation avec Member, si besoin
         $member = $entityInstance->getPartisan();
         if ($member) {
             $member->setUser($entityInstance);

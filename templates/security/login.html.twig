@@ -1,198 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <meta charset="UTF-8" />
+    <title>Connexion | AREP</title>
+    <!-- [Bootstrap CSS - facultatif] -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <style>
+        /* Hauteur totale de la page */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5; /* Fond gris clair */
+        }
 
-        <head>
-            <title>Home | Areprdc</title><!-- [Meta] -->
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            {#                <link rel="shortcut icon" type="image/x-icon" href="appUi/img/favicons/favicon.ico">#}
-            <link rel="manifest" href="appUi/img/favicons/manifest.json">
-            <meta name="msapplication-TileImage" content="appUi/img/favicons/mstile-150x150.png">
-            <meta name="theme-color" content="#ffffff">
-            <script src="appUi/js/config.js"></script>
-            <!-- [Font] Family -->
-            <link rel="preconnect" href="https://fonts.gstatic.com">
-            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
-            <link href="appUi/vendors/simplebar/simplebar.min.css" rel="stylesheet">
-            <link href="appUi/css/theme-rtl.css" rel="stylesheet" id="style-rtl">
-            <link href="appUi/css/theme.css" rel="stylesheet" id="style-default">
-            <link href="appUi/css/user-rtl.css" rel="stylesheet" id="user-style-rtl">
-            <link href="appUi/css/user.css" rel="stylesheet" id="user-style-default">
-        </head><!-- [Head] end --><!-- [Body] Start -->
+        /* Le conteneur principal prend toute la hauteur */
+        .container-fluid {
+            height: 100vh;
+        }
 
-        <script>
-            var isRTL = JSON.parse(localStorage.getItem('isRTL'));
-            if (isRTL) {
-                var linkDefault = document.getElementById('style-default');
-                var userLinkDefault = document.getElementById('user-style-default');
-                linkDefault.setAttribute('disabled', true);
-                userLinkDefault.setAttribute('disabled', true);
-                document.querySelector('html').setAttribute('dir', 'rtl');
-            } else {
-                var linkRTL = document.getElementById('style-rtl');
-                var userLinkRTL = document.getElementById('user-style-rtl');
-                linkRTL.setAttribute('disabled', true);
-                userLinkRTL.setAttribute('disabled', true);
+        /* Colonne gauche : image */
+        .left-col {
+            background-color: #fff; /* Fond blanc derrière l'image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0; /* Pas de marge interne */
+        }
+        .left-col img {
+            max-width: 90%;
+            height: auto;
+            display: block;
+        }
 
-            }
-        </script>
-        <script src="appUi/vendors/simplebar/simplebar.min.js"></script>
+        /* Colonne droite : centrée verticalement/horizontalement */
+        .right-col {
+            background-color: #f5f5f5; /* Même gris que le body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
 
+        /* Card du formulaire */
+        .login-form {
+            width: 100%;
+            max-width: 400px;         /* Limite la largeur du formulaire */
+            background-color: #fff;   /* Fond blanc pour le formulaire */
+            padding: 2rem;           /* Espace interne */
+            border-radius: 8px;      /* Coins arrondis */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Légère ombre */
+        }
+
+        .login-form h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-link {
+            font-size: 0.9rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Zone footer (logo + slogan) */
+        .logo-footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .logo-footer img {
+            height: 50px; /* Ajustez si nécessaire */
+            display: block;
+            margin: 0 auto 0.5rem;
+        }
+        .logo-footer p {
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
+<div class="container-fluid">
+    <div class="row h-100">
+        <!-- Colonne de gauche : image -->
+        <div class="col-md-6 left-col">
+            <!-- Remplacez 'appUi/img/mon_image.jpg' par votre fichier -->
+            <img src="{{ asset('assets/img/login-banniere.jpg') }}" alt="AREP - Agissons pour la République" />
+        </div>
 
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
-    <main class="main" id="top">
-        <div class="container-fluid">
-            <div class="row min-vh-100 flex-center g-0">
-                <div class="col-lg-8 col-xxl-5 py-3 position-relative"><img class="bg-auth-circle-shape" src="appUi/img/icons/spot-illustrations/bg-shape.png" alt="" width="250"><img class="bg-auth-circle-shape-2" src="/public/appUi/img/icons/spot-illustrations/shape-1.png" alt="" width="150">
-                    <div class="card overflow-hidden z-1">
-                        <div class="card-body p-0">
-                            <div class="row g-0 h-100">
-                                <div class="col-md-5 text-center bg-card" style="background-color: blue">
-                                    <div class="position-relative p-4 pt-md-5 pb-md-7" data-bs-theme="light">
-                                        <div class="bg-holder bg-auth-card-shape" style="background-image:url(appUi/img/icons/spot-illustrations/half-circle.png);">
-                                        </div>
-                                        <!--/.bg-holder-->
+        <!-- Colonne de droite : formulaire dans une card -->
+        <div class="col-md-6 right-col">
+            <div class="login-form">
+                <h2>Se connecter</h2>
 
-                                        <div class="z-1 position-relative"><a class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder" href="/">AREPRDC</a>
-                                            <p class="opacity-75 text-white">AGIR POUR LA REPUBLIQUE.</p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 mb-4 mt-md-4 mb-md-5" data-bs-theme="light">
-                                        <p class="text-white">{#Vous n'avez pas de compte ?#}<br><a class="text-decoration-underline link-light" href="/register">{#Créer en un!#}</a></p>
-                                        <p class="mb-0 mt-4 mt-md-5 fs-10 fw-semi-bold text-white opacity-75">{#Lire nos #}<a class="text-decoration-underline text-white" href="#!">{#termes#}</a> {#et#} <a class="text-decoration-underline text-white" href="#!">{#conditions générales#} </a></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-7 d-flex flex-center">
-                                    <div class="p-4 p-md-5 flex-grow-1">
-                                        <div class="row flex-between-center">
-                                            <div class="col-auto">
-                                                <h3>Connexion</h3>
-                                            </div>
-                                        </div>
-                                        <form method="post">
-                                            <div class="mb-3">
-                                                {% if error %}
-                                                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                                                {% endif %}
-                                                <label class="form-label" for="username">Username</label>
-                                                <input class="form-control" type="text" value="{{ last_username }}" id="username" name="_username" placeholder="Telephone" autocomplete="email" required autofocus/>
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="d-flex justify-content-between">
-                                                    <label class="form-label" for="password">Mot de passe</label>
-                                                </div>
-                                                <input class="form-control" id="password" type="password" name="_password" placeholder="Password" autocomplete="current-password" required/>
-                                            </div>
-                                            <div class="row flex-between-center">
-                                                <div class="col-auto">
-                                                    <div class="form-check mb-0">
-                                                        <input type="hidden" name="_csrf_token"
-                                                               value="{{ csrf_token('authenticate') }}"
-                                                        >
-{#                                                        <input class="form-check-input" type="checkbox" id="card-checkbox" name="_remember_me" />#}
-{#                                                        <label class="form-check-label mb-0" for="card-checkbox">Se souvenir de moi</label>#}
-                                                    </div>
-                                                </div>
-{#                                                <div class="col-auto"><a class="fs-10" style="color: green" href="#">Mot de passe oublié?</a></div>#}
-                                            </div>
-                                            <div class="mb-3">
-                                                <button class="btn d-block w-100 mt-3" style="background-color: blue; color:white" type="submit">
-                                                    Se connecter
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Exemple Twig/Symfony, adaptez selon votre logique -->
+                <form method="post">
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
                         </div>
+                    {% endif %}
+
+                    <!-- Nom d'utilisateur -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                name="_username"
+                                value="{{ last_username|default('') }}"
+                                placeholder="Entrez votre nom d'utilisateur"
+                                required
+                        />
                     </div>
+
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="_password"
+                                placeholder="Entrez votre mot de passe"
+                                required
+                        />
+                    </div>
+
+                    <!-- CSRF -->
+                    <input
+                            type="hidden"
+                            name="_csrf_token"
+                            value="{{ csrf_token('authenticate') }}"
+                    />
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3">
+                        Connexion
+                    </button>
+                </form>
+
+                <!-- Bas du formulaire : logo + slogan -->
+                <div class="logo-footer">
+                    <!-- Remplacez 'appUi/img/arep-logo.png' par votre logo -->
+                    <img src="{{ asset('assets/img/LOGO-3.png') }}" alt="AREP" />
+                    <p>AGISSONS POUR LA RÉPUBLIQUE</p>
                 </div>
             </div>
         </div>
-    </main>
-    <!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
+    </div>
+</div>
 
-
-    <script data-cfasync="false" src="/assets/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="appUi/vendors/popper/popper.min.js"></script>
-    <script src="appUi/vendors/bootstrap/bootstrap.min.js"></script>
-    <script src="appUi/vendors/anchorjs/anchor.min.js"></script>
-    <script src="appUi/vendors/is/is.min.js"></script>
-    <script src="appUi/vendors/fontawesome/all.min.js"></script>
-    <script src="appUi/vendors/lodash/lodash.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="appUi/vendors/list.js/list.min.js"></script>
-    <script src="appUi/js/theme.js"></script>
-    <script src="appUi/vendors/chart/chart.min.js"></script>
-    <script src="appUi/vendors/leaflet/leaflet.js"></script>
-    <script src="appUi/vendors/leaflet.markercluster/leaflet.markercluster.js"></script>
-    <script src="appUi/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js"></script>
-    <script src="appUi/vendors/countup/countUp.umd.js"></script>
-    <script src="appUi/vendors/echarts/echarts.min.js"></script>
-    <script src="appUi/vendors/fullcalendar/main.min.js"></script>
-    <script src="appUi/assets/js/flatpickr.js"></script>
-    <script src="appUi/vendors/dayjs/dayjs.min.js"></script>
-    <script src="appUi/vendors/list.js/list.min.js"></script>
-
-
+<!-- [Bootstrap JS - facultatif] -->
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
 </body>
 </html>
-
-
-
-
-
-
-{#{% extends 'base.html.twig' %}#}
-
-{#{% block title %}Log in!{% endblock %}#}
-
-{#{% block body %}#}
-{#    <form method="post">#}
-{#        {% if error %}#}
-{#            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
-{#        {% endif %}#}
-
-{#        {% if app.user %}#}
-{#            <div class="mb-3">#}
-{#                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>#}
-{#            </div>#}
-{#        {% endif %}#}
-
-{#        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
-{#        <label for="username">Username</label>#}
-{#        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username" required autofocus>#}
-{#        <label for="password">Password</label>#}
-{#        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>#}
-
-{#        <input type="hidden" name="_csrf_token"#}
-{#               value="{{ csrf_token('authenticate') }}"#}
-{#        >#}
-
-{#        #}{##}
-{#            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.#}
-{#            See https://symfony.com/doc/current/security/remember_me.html#}
-
-{#            <div class="checkbox mb-3">#}
-{#                <input type="checkbox" name="_remember_me" id="_remember_me">#}
-{#                <label for="_remember_me">Remember me</label>#}
-{#            </div>#}
-{#        #}
-
-{#        <button class="btn btn-lg btn-primary" type="submit">#}
-{#            Sign in#}
-{#        </button>#}
-{#    </form>#}
-{#{% endblock %}#}
