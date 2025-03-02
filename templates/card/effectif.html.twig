@@ -64,7 +64,7 @@
         <div class="line-clamp-1">NOM : {{ member.name }}</div>
         <div class="line-clamp-1">POST-NOM : {{ member.lastname }}</div>
         <div class="line-clamp-1">PRENOM : {{ member.firstname }}</div>
-        <div class="line-clamp-1">FONCTION : {{ member.position.label }}</div>
+        <div class="line-clamp-1">FONCTION : {{ member.position.description }}</div>
         <div class="line-clamp-1">SEXE : {{ member.gender }}</div>
         <div class="line-clamp-2">ADRESSE : {{ member.address.avenue }} N°{{ member.address.number }} {% if member.address.municipality is not null %}C/{{ member.address.municipality }}{% endif %}</div>
         <div class="line-clamp-1">FEDERATION : {{ member.address.federation }}</div>
