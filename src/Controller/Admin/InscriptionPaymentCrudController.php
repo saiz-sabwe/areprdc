@@ -69,9 +69,7 @@ class InscriptionPaymentCrudController extends AbstractCrudController
         return [
             IdField::new('id')->onlyOnIndex(),
             DateTimeField::new('createdAt', 'Créé le')->onlyOnDetail(),
-            IntegerField::new('amount'),
-            // Si besoin, vous pouvez formater le MoneyField selon votre devise
-            MoneyField::new('amount', 'Montant')->setCurrency('EUR'),
+            IntegerField::new('amount','Montant'),
             AssociationField::new('currency', 'Devise')->setRequired(true),
             AssociationField::new('mode', 'Mode de Paiement'),
             TextField::new('reference'),
