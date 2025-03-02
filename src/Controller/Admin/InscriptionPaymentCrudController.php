@@ -49,7 +49,8 @@ class InscriptionPaymentCrudController extends AbstractCrudController
                 $this->isGranted('ROLE_ADMIN') ||
                 $this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
                 $this->isGranted('ROLE_COMPTABLE') ||
-                $this->isGranted('ROLE_CHEF_FINANCE')
+                $this->isGranted('ROLE_CHEF_FINANCE') ||
+                $this->isGranted('ROLE_SERVICE_ADHESION')
             )
         )
         {

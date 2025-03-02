@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
+  <!-- <link href="./css/output.css" rel="stylesheet" /> -->
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- html2canvas -->
@@ -11,15 +12,16 @@
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
+
 <body>
-<!-- Bouton pour déclencher le téléchargement -->
-{% if member.imageName %}
-  <div class="text-center mt-4">
-    <button id="download-button" class="bg-blue-500 text-white px-4 py-2 rounded">
-      Télécharger la Carte
-    </button>
-  </div>
-{% endif %}
+<div class="text-center mt-4">
+  <button
+          id="download-button"
+          class="bg-blue-500 text-white px-4 py-2 rounded"
+  >
+    Télécharger la Carte
+  </button>
+</div>
 <!-- Stockage des données du membre -->
 <div id="member-data"
      data-firstname="{{ member.firstname }}"
@@ -27,7 +29,10 @@
      data-member-id="{{ member.id }}">
 </div>
 <div class="flex items-center justify-center min-h-screen bg-gray-400">
-  <div class="h-[474px] w-[732px] bg-white relative overflow-hidden" id="card-container">
+  <div
+          class="h-[474px] w-[732px] bg-white relative overflow-hidden"
+          id="card-container"
+  >
     <!-- the banner -->
     <div
             class="h-[105px] bg-gradient-to-bl from-gray-50 to-gray-300 flex items-center justify-center gap-8"
@@ -54,11 +59,8 @@
     </div>
 
     <!-- the main body -->
-    <div class="h-[calc(100%-150px)] flex items-start gap-4 pt-1">
-      <div
-              class="w-[70%] px-5 text-[#002494] text-[30px]/[31px] font-semibold"
-      >
-
+    <div class="h-[334px] flex items-start gap-4 pt-1">
+      <div class="w-[70%] px-5 text-[#002494] text-[20px]/[36px] font-bold">
         <div class="line-clamp-1">NOM : {{ member.name }}</div>
         <div class="line-clamp-1">POST-NOM : {{ member.lastname }}</div>
         <div class="line-clamp-1">PRENOM : {{ member.firstname }}</div>
@@ -68,13 +70,12 @@
         <div class="line-clamp-1">FEDERATION : {{ member.address.federation }}</div>
         <div class="line-clamp-1">EXPIRATION : {{ member.expiredAt|date('d /m /Y') }}</div>
         <div class="line-clamp-1">CODE : {{ member.reference }}</div>
-
       </div>
       <div
               class="w-[30%] px-6 flex flex-col items-center justify-center gap-3"
       >
         <div
-                class="h-[180px] w-full border-2 border-[#002494] overflow-hidden"
+                class="h-[180px] w-[160px] border-2 border-[#002494] overflow-hidden aspect-[3/4]"
         >
           <!-- the profile pic goes here -->
           {% if member.imageName %}
@@ -83,15 +84,20 @@
             <img src="{{ asset('assets/img/card/pic.jpg')  }}" alt="Image par défaut" class="w-full h-full object-cover" />
           {% endif %}
         </div>
-        <div class="w-[75%] h-[100px] overflow-hidden">
+        <div class="w-[100px] h-[100px] overflow-hidden">
           <div id="qrcode" class="w-[128px] h-[128px] mb-4"></div>
+          <!-- <img
+            src="/src/img/qrcode.png"
+            alt=""
+            class="w-full h-full object-contain"
+          /> -->
         </div>
       </div>
     </div>
 
     <!-- the footer -->
     <div
-            class="h-[45px] bg-[#130A77] text-white flex items-center justify-center text-center py-2"
+            class="h-[35px] bg-[#130A77] text-white flex items-center justify-center text-center py-1"
     >
       <img
               src="{{ asset('assets/img/card/MEMBRE-EFFECTIF.png') }}"
@@ -101,7 +107,7 @@
     </div>
   </div>
 </div>
-<!-- Script de capture, redimensionnement, téléchargement et génération du QR code ! -->
+</body>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Génération du QR code
@@ -109,11 +115,11 @@
     const memberId = memberData.getAttribute("data-member-id");
     new QRCode(document.getElementById("qrcode"), {
       text: memberId,
-      width: 128,
-      height: 128,
+      width: 100,
+      height: 100,
       colorDark: "#050000",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+      correctLevel: QRCode.CorrectLevel.H,
     });
 
     // Bouton de téléchargement
@@ -132,6 +138,7 @@
         scale: 4, // Augmentez la résolution de l'image
         useCORS: true, // Autorise le chargement d'images externes
         logging: true, // Active les logs pour le débogage
+        letterRendering: true, // Ensures accurate text rendering
       };
 
       // Capturez le contenu et convertissez-le en image
@@ -151,82 +158,6 @@
         link.click();
       });
     });
-
-
-    // downloadButton.addEventListener("click", function () {
-    //   // Récupération des données du membre
-    //   const firstName = memberData.getAttribute("data-firstname");
-    //   const name = memberData.getAttribute("data-name");
-    //
-    //   // Sélection du conteneur à capturer
-    //   const element = document.getElementById("card-container");
-    //
-    //   // Options pour html2canvas
-    //   const options = {
-    //     scale: 2, // Augmentez la résolution de l'image
-    //     useCORS: true, // Autorise le chargement d'images externes
-    //     logging: true, // Active les logs pour le débogage
-    //   };
-    //
-    //   // Capturez le contenu et convertissez-le en image
-    //   html2canvas(element, options).then((canvas) => {
-    //     // Dimensions du format B6
-    //     const targetWidth = 708;
-    //     const targetHeight = 498;
-    //
-    //     // Créez un nouveau canvas pour redimensionner l'image
-    //     const resizedCanvas = document.createElement("canvas");
-    //     const resizedContext = resizedCanvas.getContext("2d");
-    //
-    //     // Définir les dimensions du nouveau canvas
-    //     resizedCanvas.width = targetWidth;
-    //     resizedCanvas.height = targetHeight;
-    //
-    //     // Calculer les proportions pour redimensionner l'image
-    //     const ratio = Math.min(
-    //             targetWidth / canvas.width,
-    //             targetHeight / canvas.height
-    //     );
-    //     const newWidth = canvas.width * ratio;
-    //     const newHeight = canvas.height * ratio;
-    //
-    //     // Centrer l'image sur le nouveau canvas
-    //     const offsetX = (targetWidth - newWidth) / 2;
-    //     const offsetY = (targetHeight - newHeight) / 2;
-    //
-    //     // Remplir le fond avec du blanc
-    //     resizedContext.fillStyle = "white";
-    //     resizedContext.fillRect(0, 0, targetWidth, targetHeight);
-    //
-    //     // Redimensionner et dessiner l'image capturée
-    //     resizedContext.drawImage(
-    //             canvas,
-    //             0,
-    //             0,
-    //             canvas.width,
-    //             canvas.height,
-    //             offsetX,
-    //             offsetY,
-    //             newWidth,
-    //             newHeight
-    //     );
-    //
-    //     // Convertissez le canvas redimensionné en image PNG
-    //     const imgData = resizedCanvas.toDataURL("image/png");
-    //
-    //     // Créez un lien de téléchargement
-    //     const link = document.createElement("a");
-    //     link.href = imgData;
-    //
-    //     // Nom du fichier téléchargé en utilisant le nom du membre
-    //     const fileName = `${firstName}_${name}.png`; // Par exemple : "John_Doe.png"
-    //     link.download = fileName;
-    //
-    //     // Déclencher le téléchargement
-    //     link.click();
-    //   });
-    // });
   });
 </script>
-</body>
 </html>
