@@ -44,10 +44,13 @@ class InscriptionPaymentCrudController extends AbstractCrudController
         // on désactive les actions NEW, EDIT et DELETE afin de n'autoriser
         // que la consultation (via DETAIL).
         if (
-            !$this->isGranted('ROLE_ADMIN') ||
-            !$this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
-            !$this->isGranted('ROLE_COMPTABLE') ||
-            !$this->isGranted('ROLE_CHEF_FINANCE')
+
+            !(
+                $this->isGranted('ROLE_ADMIN') ||
+                $this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
+                $this->isGranted('ROLE_COMPTABLE') ||
+                $this->isGranted('ROLE_CHEF_FINANCE')
+            )
         )
         {
             return $actions
