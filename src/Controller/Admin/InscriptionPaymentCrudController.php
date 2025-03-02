@@ -43,7 +43,13 @@ class InscriptionPaymentCrudController extends AbstractCrudController
         // Si l'utilisateur connecté n'est pas admin,
         // on désactive les actions NEW, EDIT et DELETE afin de n'autoriser
         // que la consultation (via DETAIL).
-        if (!$this->isGranted('ROLE_ADMIN')) {
+        if (
+            !$this->isGranted('ROLE_ADMIN') ||
+            !$this->isGranted('ROLE_SECRETAIRE_GENERAL') ||
+            !$this->isGranted('ROLE_COMPTABLE') ||
+            !$this->isGranted('ROLE_CHEF_FINANCE')
+        )
+        {
             return $actions
                 ->disable(Action::NEW, Action::EDIT, Action::DELETE)
                 ->add(Crud::PAGE_INDEX, Action::DETAIL);
